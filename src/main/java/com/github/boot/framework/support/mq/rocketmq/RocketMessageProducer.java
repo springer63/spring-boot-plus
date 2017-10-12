@@ -1,0 +1,101 @@
+package com.github.boot.framework.support.mq.rocketmq;
+
+import com.github.boot.framework.support.mq.Message;
+import com.github.boot.framework.support.mq.MessageProducer;
+import com.github.boot.framework.support.serializer.JacksonSerializer;
+import com.github.boot.framework.support.serializer.Serializer;
+import com.github.boot.framework.util.JsonUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+/**
+ * Rocket MQ Producer
+ * Created by cjh on 2017/3/15.
+ */
+public class RocketMessageProducer implements InitializingBean, DisposableBean, MessageProducer {
+
+    private static final Logger logger = LoggerFactory.getLogger(RocketMessageProducer.class);
+
+    private String namesrv;
+
+    private Serializer<Message> serializer;
+
+    private DefaultMQProducer producer;
+
+    @Override
+    public void send(Message message) {
+        try {
+            producer.send(createRocketMessage(message));
+            logger.info("发送消息成功：[" + message.topic() + "],content:{}", JsonUtils.toJson(message));
+        } catch (Exception e) {
+            logger.info(ExceptionUtils.getFullStackTrace(e));
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendAsync(final Message message) {
+        try {
+            producer.send(createRocketMessage(message), new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    logger.info("发送消息成功：[" + message.topic() + "],content:{}", JsonUtils.toJson(message));
+                }
+
+                @Override
+                public void onException(Throwable paramThrowable) {
+                    logger.error("发送消息出错：[" + message.topic() + "]" + ExceptionUtils.getFullStackTrace(paramThrowable));
+                }
+            });
+        } catch (Exception e) {
+            logger.error("发送消息出错：[" + message.topic() + "]" + ExceptionUtils.getFullStackTrace(e));
+        }
+    }
+
+
+    @Override
+    public void destroy() {
+        producer.shutdown();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (serializer == null) {
+            serializer = new JacksonSerializer<>();
+        }
+        this.producer = new DefaultMQProducer("rocket_prod_group");
+        producer.setNamesrvAddr(namesrv);
+        producer.setInstanceName("RocketMqProducer");
+        producer.setRetryTimesWhenSendAsyncFailed(16);
+        producer.setSendMsgTimeout(6000);
+        producer.start();
+        logger.info("RocketMQ Producer Started ......");
+    }
+
+    /**
+     * 转化为Rocket消息
+     *
+     * @param message
+     */
+    private org.apache.rocketmq.common.message.Message createRocketMessage(Message message) {
+        return new org.apache.rocketmq.common.message.Message(message.topic(), "*", message.getKey(), serializer.serialize(message));
+    }
+
+    public void setNamesrv(String namesrv) {
+        this.namesrv = namesrv;
+    }
+
+    public Serializer<Message> getSerializer() {
+        return serializer;
+    }
+
+    public void setSerializer(Serializer<Message> serializer) {
+        this.serializer = serializer;
+    }
+}
