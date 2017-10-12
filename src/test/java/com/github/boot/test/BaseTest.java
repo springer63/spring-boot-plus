@@ -1,4 +1,4 @@
-package com.github.boot.framework.test;
+package com.github.boot.test;
 
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * Created by cjh on 2017/3/21.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = BaseConfig.class, loader = SpringBootContextLoader.class)
+@ContextConfiguration(classes = Application.class, loader = SpringBootContextLoader.class)
 public class BaseTest {
 
     @BeforeClass
