@@ -4,13 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.boot</groupId>
-    <artifactId>framework</artifactId>
+    <artifactId>spring-boot-plus</artifactId>
     <version>1.0.0</version>
     <description>spring-boot-plus</description>
 
     <properties>
         <java.version>1.8</java.version>
         <github.global.server>github</github.global.server>
+        <author>springer63</author>
+        <commotter>springer63</commotter>
     </properties>
 
     <dependencyManagement>
@@ -86,7 +88,7 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>3.3.1</version>
+            <version>3.5.4</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -128,11 +130,17 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.16</version>
         </dependency>
-
     </dependencies>
     <build>
         <finalName>spring-boot-plus</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -165,7 +173,7 @@
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>0.9</version>
+                <version>0.12</version>
                 <configuration>
                     <message>Maven artifacts for ${project.version}</message>
                     <noJekyll>true</noJekyll>
@@ -189,27 +197,6 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>nexus-repos</id>
-            <name>Team Nexus Repository</name>
-            <url>http://192.168.1.202:8081/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>maven-repo-master</id>
-            <url>https://raw.github.com/springer63/maven-repo/master/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>nexus</id>
