@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
  */
 public class JdkSerializer<T> implements Serializer<T>{
 
+	@Override
 	public byte[] serialize(T obj) {
 		byte[] buffer = null;
 		ByteArrayOutputStream baos = null;
@@ -35,6 +36,7 @@ public class JdkSerializer<T> implements Serializer<T>{
 		return buffer;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public T deserialize(byte[] bytes) {
 		ObjectInputStream ois = null;

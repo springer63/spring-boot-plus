@@ -152,6 +152,9 @@ public class SpecUtils {
                     break;
                 case BETWEEN_UPPER:
                     upperField = field;
+                    break;
+                default:
+                    break;
             }
         }
         if(upperField != null || lowerField != null){

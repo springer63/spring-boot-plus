@@ -1,12 +1,12 @@
 package com.github.boot.framework.support.mq.onsmq;
 
-import com.github.boot.framework.support.mq.Message;
+import com.github.boot.framework.support.mq.AbstractMessage;
 
 /**
  * 定时消息
  * Created by cjh on 2017/3/29.
  */
-public abstract class ScheduledMessage extends Message {
+public abstract class ScheduledMessage extends AbstractMessage {
 
 	private static final long serialVersionUID = -398756544045530216L;
 	

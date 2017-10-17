@@ -184,8 +184,9 @@ public class StringUtils {
 			}
 			if ((i >= 0) && Character.isUpperCase(c)) {
 				if (!upperCase || !nextUpperCase) {
-					if (i > 0)
+					if (i > 0){
 						sb.append('_');
+					}
 				}
 				upperCase = true;
 			} else {

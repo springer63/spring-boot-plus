@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class KryoFactory {
 
-    private static final KryoFactory factory = new KryoFactory();
+    private static final KryoFactory KRYO_FACTORY = new KryoFactory();
 
     private final Set<Class<?>> registrations = new LinkedHashSet<Class<?>>();
     
@@ -52,7 +52,7 @@ public class KryoFactory {
     }
 
     public static KryoFactory getFactory() {
-        return factory;
+        return KRYO_FACTORY;
     }
 
 	public boolean isKryoReferences() {

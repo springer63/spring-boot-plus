@@ -66,7 +66,7 @@ public class StompMessageSender implements MessageListener<StompMessageSender.St
      * STOMP消息实体
      */
     @MessageTopic(value = "stomp_message_topic", model = MessageModel.BROADCASTING)
-    public static class StompMessage extends Message {
+    public static class StompMessage extends AbstractMessage {
 
 		private static final long serialVersionUID = -8701368073164790685L;
 

@@ -1,10 +1,7 @@
 package com.github.boot.framework.support.mq.onsmq;
 
-import com.aliyun.openservices.ons.api.Action;
-import com.aliyun.openservices.ons.api.ConsumeContext;
-import com.aliyun.openservices.ons.api.Consumer;
-import com.aliyun.openservices.ons.api.ONSFactory;
-import com.github.boot.framework.support.mq.Message;
+import com.aliyun.openservices.ons.api.*;
+import com.github.boot.framework.support.mq.AbstractMessage;
 import com.github.boot.framework.support.mq.MessageListener;
 import com.github.boot.framework.support.mq.MessageListenerContainer;
 import com.github.boot.framework.support.mq.MessageTopic;
@@ -42,8 +39,9 @@ public class OnsMessageListenerContainer extends MessageListenerContainer implem
 	@Autowired(required=false)
 	private OnsMessageProducer producer;//用来发送延迟消息的生产者
 
-	private Serializer<Message> serializer;
+	private Serializer<AbstractMessage> serializer;
 
+	@Override
 	public void destroy() throws Exception {
 		this.shutdown();
 	}
@@ -54,12 +52,14 @@ public class OnsMessageListenerContainer extends MessageListenerContainer implem
 		}
 	}
 
+	@Override
 	public void shutdown() {
 		if (!consumer.isClosed()) {
 			consumer.shutdown();
 		}
 	}
 
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		Properties properties = new Properties();
 		properties.put("ConsumerId", this.consumerId);
@@ -82,9 +82,10 @@ public class OnsMessageListenerContainer extends MessageListenerContainer implem
 	 * ONS消息监听实现类
 	 */
 	private class AliMessageListener implements com.aliyun.openservices.ons.api.MessageListener {
-		public Action consume(com.aliyun.openservices.ons.api.Message onsMsg, ConsumeContext context) {
+		@Override
+		public Action consume(Message onsMsg, ConsumeContext context) {
 			try {
-				Message message = serializer.deserialize(onsMsg.getBody());
+				AbstractMessage message = serializer.deserialize(onsMsg.getBody());
 				logger.info("接收消息成功TOPIC:{}, ID:{}, CONTENT:{}", message.topic(), onsMsg.getMsgID(), JsonUtils.toJson(message));
 				if(message instanceof ScheduledMessage && producer != null){
 					ScheduledMessage scheduledMessage = (ScheduledMessage) message;
@@ -97,7 +98,7 @@ public class OnsMessageListenerContainer extends MessageListenerContainer implem
 				if(getListeners(topic) == null){
 					return Action.ReconsumeLater;
 				}
-				for (MessageListener<Message> listener : getListeners(topic)) {
+				for (MessageListener<AbstractMessage> listener : getListeners(topic)) {
 					listener.onMessage(message);
 				}
 				return Action.CommitMessage;
@@ -130,11 +131,11 @@ public class OnsMessageListenerContainer extends MessageListenerContainer implem
 		this.secretKey = secretKey;
 	}
 	
-	public Serializer<Message> getSerializer() {
+	public Serializer<AbstractMessage> getSerializer() {
 		return serializer;
 	}
 
-	public void setSerializer(Serializer<Message> serializer) {
+	public void setSerializer(Serializer<AbstractMessage> serializer) {
 		this.serializer = serializer;
 	}
 	

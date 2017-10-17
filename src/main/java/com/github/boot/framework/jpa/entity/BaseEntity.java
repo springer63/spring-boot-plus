@@ -38,7 +38,9 @@ public class BaseEntity<T> implements Comparable<T>, Serializable{
 
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == null)	return false;
+		if(obj == null)	{
+			return false;
+		}
 		try{
 			for (Field f : this.getClass().getDeclaredFields()){
                 if(f.getAnnotation(Id.class) == null){

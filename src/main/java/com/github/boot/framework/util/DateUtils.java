@@ -1,18 +1,11 @@
 package com.github.boot.framework.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DateUtils {
-	protected static transient final Log log = LogFactory.getLog(DateUtils.class);
-
-	private static SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private static String FORMAT_STRING="yyyy-MM-dd HH:mm:ss";
 
@@ -47,22 +40,6 @@ public class DateUtils {
 		return calendar.getTime();
 	}
 	
-
-	public static String dateToString(Date date) {
-		if (date == null)
-			return "";
-		Calendar cl = Calendar.getInstance();
-		cl.setTime(date);
-		return cl.get(Calendar.YEAR) + "-" + (cl.get(Calendar.MONTH) + 1) + "-"
-				+ cl.get(Calendar.DAY_OF_MONTH);
-	}
-
-	public static String dateTo0String(Date date) {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		return formatter.format(date).trim();
-
-	}
-
 	public static String dateToString(Date dDate, String format) {
 		try {
 			SimpleDateFormat simDateFormat = new SimpleDateFormat(format);
@@ -71,63 +48,6 @@ public class DateUtils {
 			return null;
 		}
 	}
-
-	public static Date parseTimeStamp(String date) throws Exception {
-		try {
-			return timeStampFormat.parse(date);
-		} catch (ParseException e) {
-			throw new Exception("日期格式不正确");
-		}
-
-	}
-
-	/**
-	 * 根据指定日期格式格式化日期
-	 * @param date
-	 * @param formater
-	 * @return
-	 */
-	public static String format(Date date, String formater) {
-		if (date == null) {
-			return null;
-		}
-		
-		if(null == timeStampFormat || timeStampFormat.equals("")){
-			return timeStampFormat.format(date);
-		}
-		SimpleDateFormat sdf = new SimpleDateFormat(formater);
-		return sdf.format(date);
-	}
-
-	/**
-	 * 格式化日期
-	 * @param date
-	 * @param formater
-	 * @return
-	 */
-	public static Date parse(String date, String formater) {
-		SimpleDateFormat sdf = new SimpleDateFormat(formater);
-		Date result = null;
-		try {
-			result = sdf.parse(date.trim());
-		} catch (ParseException e) {
-			log.error("", e);
-		}
-		return result;
-	}
-	
-	 /**
-     * @Description: long类型转换成日期
-     * 
-     * @param lo 毫秒数
-     * @return String yyyy-MM-dd
-     */
-    public static String longToDate(long lo){
-        Date date = new Date(lo);
-        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
-        return sd.format(date);
-    }
-
 
 	/**
 	 * 判断选择的日期是否是本周

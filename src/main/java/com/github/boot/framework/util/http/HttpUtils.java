@@ -455,8 +455,9 @@ public class HttpUtils {
      * @return
      */
     public HttpUtils setContentEncoding(final String encoding) {
-        if (builder != null)
+        if (builder != null){
             builder.setContentEncoding(encoding);
+        }
         return this;
     }
 
@@ -467,8 +468,9 @@ public class HttpUtils {
      * @return
      */
     public HttpUtils setContentType(ContentType contentType) {
-        if (builder != null)
+        if (builder != null){
             builder.setContentType(contentType);
+        }
         return this;
     }
 
@@ -480,8 +482,9 @@ public class HttpUtils {
      * @return
      */
     public HttpUtils setContentType(final String mimeType, final Charset charset) {
-        if (builder != null)
+        if (builder != null){
             builder.setContentType(ContentType.create(mimeType, charset));
+        }
         return this;
     }
 
@@ -659,8 +662,9 @@ public class HttpUtils {
      * @return
      */
     public HttpUtils SetCookieStore(CookieStore cookieStore) {
-        if (cookieStore == null)
+        if (cookieStore == null){
             return this;
+        }
         HttpUtils.cookieStore = cookieStore;
         return this;
     }
@@ -672,8 +676,9 @@ public class HttpUtils {
      * @return
      */
     public HttpUtils addCookie(Cookie... cookies) {
-        if (cookies == null)
+        if (cookies == null){
             return this;
+        }
         for (int i = 0; i < cookies.length; i++) {
             cookieStore.addCookie(cookies[i]);
         }
@@ -755,24 +760,25 @@ public class HttpUtils {
         switch (type) {
             case 1:
                 httpEntity = builder.build();
-                if (httpEntity.getContentLength() > 0)
+                if (httpEntity.getContentLength() > 0){
                     ((HttpPost) request).setEntity(builder.build());
+                }
                 break;
-
             case 2:
                 HttpGet get = ((HttpGet) request);
                 get.setURI(uri);
                 break;
-
             case 3:
                 httpEntity = builder.build();
-                if (httpEntity.getContentLength() > 0)
+                if (httpEntity.getContentLength() > 0){
                     ((HttpPut) request).setEntity(httpEntity);
+                }
                 break;
-
             case 4:
                 HttpDelete delete = ((HttpDelete) request);
                 delete.setURI(uri);
+                break;
+            default:
                 break;
         }
         request.setConfig(requestConfig.build());

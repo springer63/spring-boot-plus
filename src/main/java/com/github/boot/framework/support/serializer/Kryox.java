@@ -53,8 +53,9 @@ public class Kryox extends Kryo {
         if (constructor == null) {
             constructor = newConstructorForSerialization(type);
             Constructor<?> saved = _constructors.putIfAbsent(type, constructor);
-            if(saved!=null)
+            if(saved!=null){
                 constructor=saved;
+            }
         }
         return (T) newInstanceFrom(constructor);
     }

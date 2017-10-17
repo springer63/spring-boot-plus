@@ -5,7 +5,7 @@ package com.github.boot.framework.support.mq;
  * @author cjh
  * @version 1.0
  */
-public interface MessageListener<T extends Message> {
+public interface MessageListener<T extends AbstractMessage> {
 	
 	/**
 	 * 接收并处理订阅消息

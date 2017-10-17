@@ -40,7 +40,9 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter{
 		}
 		HandlerMethod method = (HandlerMethod) handler;
 		ApiAccessLimits annotation = method.getMethodAnnotation(ApiAccessLimits.class);
-		if(annotation == null) return true;
+		if(annotation == null){
+			return true;
+		}
 		Object userId = request.getSession().getAttribute(ConstUtils.SESSION_USER_ID);
 		String ip = ServletUtils.getClientIp(request);
 		String lockedKey = null;

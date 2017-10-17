@@ -1,6 +1,6 @@
 package com.github.boot.framework.config;
 
-import com.github.boot.framework.support.mq.Message;
+import com.github.boot.framework.support.mq.AbstractMessage;
 import com.github.boot.framework.support.mq.rocketmq.RocketMessageListenerContainer;
 import com.github.boot.framework.support.mq.rocketmq.RocketMessageProducer;
 import com.github.boot.framework.support.serializer.JacksonSerializer;
@@ -25,13 +25,13 @@ public class MqConfigure {
 
 	@Bean
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-    public Serializer<Message>  serializer(){
+    public Serializer<AbstractMessage>  serializer(){
         return new JacksonSerializer();
     }
 
     @Bean
     @Autowired
-    public RocketMessageProducer messageProducer(Serializer<Message> serializer){
+    public RocketMessageProducer messageProducer(Serializer<AbstractMessage> serializer){
         RocketMessageProducer producer = new RocketMessageProducer();
         producer.setNamesrv(this.namesrv);
         producer.setSerializer(serializer);
@@ -40,7 +40,7 @@ public class MqConfigure {
 
     @Bean
     @Autowired
-    public RocketMessageListenerContainer messageListenerContainer(Serializer<Message> serializer){
+    public RocketMessageListenerContainer messageListenerContainer(Serializer<AbstractMessage> serializer){
         RocketMessageListenerContainer listenerContainer = new RocketMessageListenerContainer();
         listenerContainer.setNamesrv(namesrv);
         listenerContainer.setGroupName(groupName);
@@ -65,7 +65,7 @@ public class MqConfigure {
 
     @Bean
     @Autowired
-    public OnsMessageProducer messageProducer(Serializer<Message> serializer){
+    public OnsMessageProducer messageProducer(Serializer<AbstractMessage> serializer){
         OnsMessageProducer producer = new OnsMessageProducer();
         producer.setSecretKey(this.secretKey);
         producer.setAccessKey(this.accessKey);
@@ -76,7 +76,7 @@ public class MqConfigure {
 
     @Bean
     @Autowired
-    public OnsMessageListenerContainer messageListenerContainer(Serializer<Message> serializer){
+    public OnsMessageListenerContainer messageListenerContainer(Serializer<AbstractMessage> serializer){
         OnsMessageListenerContainer listenerContainer = new OnsMessageListenerContainer();
         listenerContainer.setSecretKey(this.secretKey);
         listenerContainer.setAccessKey(this.accessKey);

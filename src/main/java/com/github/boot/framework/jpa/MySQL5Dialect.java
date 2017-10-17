@@ -27,6 +27,7 @@ public class MySQL5Dialect extends MySQLDialect {
         return false;
     }
 
+    @Override
     public ViolatedConstraintNameExtracter getViolatedConstraintNameExtracter() {
         return EXTRACTER;
     }

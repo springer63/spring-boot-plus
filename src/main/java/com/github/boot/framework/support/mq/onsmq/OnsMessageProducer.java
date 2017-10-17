@@ -2,6 +2,7 @@ package com.github.boot.framework.support.mq.onsmq;
 
 import com.aliyun.openservices.ons.api.*;
 import com.aliyun.openservices.ons.api.Message;
+import com.github.boot.framework.support.mq.AbstractMessage;
 import com.github.boot.framework.support.mq.MessageProducer;
 import com.github.boot.framework.support.serializer.Serializer;
 import com.github.boot.framework.util.JsonUtils;
@@ -22,7 +23,8 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
 
 	/**
 	 * 普通消息如果消费不成功， 最多保存三天
-	 * 定时/延时消息 msg.setStartDeliverTime 的参数可设置40天内的任何时刻（单位毫秒），超过40天消息发送将失败。
+	 * 定时/延时消息 msg.setStartDeliverTime 的参数可设置40天内的任何时刻（单位毫秒），
+	 * 超过40天消息发送将失败。
 	 * @see //help.aliyun.com/document_detail/43349.html?spm=5176.doc29532.6.573.1MLbWC
 	 */
 	public final static long MSG_MAX_STORE_TIME = 39L * 24L * 60L * 60L * 1000L;
@@ -35,7 +37,7 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
 	
 	private Producer producer;
 	
-	private Serializer<com.github.boot.framework.support.mq.Message> serializer;
+	private Serializer<AbstractMessage> serializer;
 	
 	private static final Logger logger = LoggerFactory.getLogger(OnsMessageProducer.class);
     
@@ -44,7 +46,7 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
 	 * @param message 消息
 	 */
     @Override
-    public void send(com.github.boot.framework.support.mq.Message message){
+    public void send(AbstractMessage message){
     	Message onsMsg = createONSMessage(message);
     	producer.send(onsMsg);
 		logger.info("发送消息成功TOPIC:{}, CONTENT:{}", message.topic(), JsonUtils.toJson(message));
@@ -54,7 +56,7 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
 	 * 单向发送消息，Oneway形式，服务器不应答，无法保证消息是否成功到达服务器
 	 * @param message 消息
 	 */
-    public void sendOneway(com.github.boot.framework.support.mq.Message message){
+    public void sendOneway(AbstractMessage message){
     	Message onsMsg = createONSMessage(message);
     	producer.sendOneway(onsMsg);
 		logger.info("发送消息成功TOPIC:{}, CONTENT:{}", message.topic(), JsonUtils.toJson(message));
@@ -65,12 +67,14 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
    	 * @param message 消息
    	 */
     @Override
-    public void sendAsync(final com.github.boot.framework.support.mq.Message message){
+    public void sendAsync(final AbstractMessage message){
     	Message onsMsg = createONSMessage(message);
 		producer.sendAsync(onsMsg, new SendCallback() {
+			@Override
 			public void onSuccess(SendResult sendResult) {
 				logger.info("发送消息成功TOPIC:{}, CONTENT:{}", message.topic(), JsonUtils.toJson(message));
 			}
+			@Override
 			public void onException(OnExceptionContext context) {
 				logger.error("发送消息失败TOPIC:{}, CONTENT:{}，EXCEPTION:{}", message.topic(), JsonUtils.toJson(message), context.getException().getMessage());
 				logger.error(ExceptionUtils.getFullStackTrace(context.getException()));
@@ -78,12 +82,14 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
 		});
     }
 
-    public void destroy() throws Exception {
+    @Override
+	public void destroy() throws Exception {
 		if (this.producer != null) {
 			this.producer.shutdown();
 		}
 	}
 
+	@Override
 	public void afterPropertiesSet() throws Exception {
         Properties properties = new Properties();
         properties.put("ProducerId", this.getProducerId());
@@ -97,7 +103,7 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
 	 * 转化为ONS消息
 	 * @param message
 	 */
-	private Message createONSMessage(com.github.boot.framework.support.mq.Message message){
+	private Message createONSMessage(AbstractMessage message){
 		Message onsMsg = new Message(message.topic(), "*", message.getKey(), serializer.serialize(message));
 		if(message instanceof  ScheduledMessage){
 			Long deliverTime = ((ScheduledMessage)message).getDeliverTime();
@@ -134,20 +140,12 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
 		this.secretKey = secretKey;
 	}
 
-	public Serializer<com.github.boot.framework.support.mq.Message> getSerializer() {
+	public Serializer<AbstractMessage> getSerializer() {
 		return serializer;
 	}
 
-	public void setSerializer(Serializer<com.github.boot.framework.support.mq.Message> serializer) {
+	public void setSerializer(Serializer<AbstractMessage> serializer) {
 		this.serializer = serializer;
-	}
-
-	public boolean isStarted() {
-		return producer.isStarted();
-	}
-	
-	public boolean isClosed() {
-		return producer.isClosed();
 	}
 
 	public void start() {

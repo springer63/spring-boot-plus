@@ -1,6 +1,6 @@
 package com.github.boot.framework.support.mq.rocketmq;
 
-import com.github.boot.framework.support.mq.Message;
+import com.github.boot.framework.support.mq.AbstractMessage;
 import com.github.boot.framework.support.mq.MessageListener;
 import com.github.boot.framework.support.mq.MessageListenerContainer;
 import com.github.boot.framework.support.mq.MessageTopic;
@@ -39,7 +39,7 @@ public class RocketMessageListenerContainer extends MessageListenerContainer imp
 
     private DefaultMQPushConsumer broadcastConsumer;
 
-    private Serializer<Message> serializer = new JacksonSerializer<>();
+    private Serializer<AbstractMessage> serializer = new JacksonSerializer<>();
 
     @Override
     public void shutdown() {
@@ -120,10 +120,10 @@ public class RocketMessageListenerContainer extends MessageListenerContainer imp
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
             try{
                 for (final MessageExt msg : msgs){
-                    final Message message = serializer.deserialize(msg.getBody());
+                    final AbstractMessage message = serializer.deserialize(msg.getBody());
                     LOGGER.info("接收消息成功TOPIC:{}, ID:{} CONTENT:{}", message.topic(), msg.getMsgId(), JsonUtils.toJson(message));
-                    List<MessageListener<Message>> listeners = getListeners(message.getClass().getAnnotation(MessageTopic.class));
-                    for(final MessageListener<Message> listener : listeners){
+                    List<MessageListener<AbstractMessage>> listeners = getListeners(message.getClass().getAnnotation(MessageTopic.class));
+                    for(final MessageListener<AbstractMessage> listener : listeners){
                         listener.onMessage(message);
                         LOGGER.info("消费消息成功TOPIC:{}, ID:{} CONTENT:{}", message.topic(), msg.getMsgId(), JsonUtils.toJson(message));
                     }
@@ -153,11 +153,11 @@ public class RocketMessageListenerContainer extends MessageListenerContainer imp
         this.namesrv = namesrv;
     }
 
-    public Serializer<Message> getSerializer() {
+    public Serializer<AbstractMessage> getSerializer() {
         return serializer;
     }
 
-    public void setSerializer(Serializer<Message> serializer) {
+    public void setSerializer(Serializer<AbstractMessage> serializer) {
         this.serializer = serializer;
     }
 }

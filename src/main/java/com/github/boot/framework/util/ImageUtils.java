@@ -276,10 +276,12 @@ public class ImageUtils {
 			// 保存新图片
 			ImageIO.write(bi, writeImageFormat, new File(toPath));
 		} finally {
-			if (fis != null)
+			if (fis != null){
 				fis.close();
-			if (iis != null)
+			}
+			if (iis != null){
 				iis.close();
+			}
 		}
 	}
 
@@ -300,9 +302,10 @@ public class ImageUtils {
 		try {
 			Graphics2D g = image.createGraphics();
 			g.setBackground(new Color(255, 0, 0));
-			g.setColor(Color.WHITE);// 设置字体颜色
+			// 设置字体颜色
+			g.setColor(Color.WHITE);
 			g.setFont(font);
-			String[] lines = content.split("-"); // Windows \r\n, Linux \n
+			String[] lines = content.split("-");
 			for (int i = 0; i < lines.length; i++) {
 				g.drawString(lines[i], x, y + (font.getSize() + 4) * i);
 			}
@@ -341,18 +344,22 @@ public class ImageUtils {
 			int y = (int) Math
 					.round(Math.sin(theta) * (corners[i] - cx) + Math.cos(theta) * (corners[i + 1] - cy) + cy);
 			// Update our bounds
-			if (x > maxX)
+			if (x > maxX){
 				maxX = x;
-			if (x < minX)
+			}
+			if (x < minX){
 				minX = x;
-			if (y > maxY)
+			}
+			if (y > maxY){
 				maxY = y;
-			if (y < minY)
+			}
+			if (y < minY){
 				minY = y;
+			}
 		}
 		// Update Image Center Coordinates
-		cx = (int) (cx - minX);
-		cy = (int) (cy - minY);
+		cx = cx - minX;
+		cy = cy - minY;
 		// Create Buffered Image
 		BufferedImage result = new BufferedImage(maxX - minX, maxY - minY, BufferedImage.TYPE_INT_ARGB);
 		// Create Graphics
@@ -562,7 +569,9 @@ public class ImageUtils {
 			GIFImageReader gifReader = (GIFImageReader) readerSpi.createReaderInstance();
 			gifReader.setInput(in);
 			int num = gifReader.getNumImages(true);
-			if (num < frame) return null;
+			if (num < frame){
+				return null;
+			}
 			BufferedImage image = gifReader.read(frame);
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			ImageIO.write(image, "jpg", os);

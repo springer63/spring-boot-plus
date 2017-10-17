@@ -14,30 +14,32 @@ import com.esotericsoftware.kryo.io.Output;
  */
 public class KryoSerializer<T> implements Serializer<T> {
 	
-	private static final KryoFactory kryoFactory = KryoFactory.getFactory();
+	private static final KryoFactory KRYO_FACTORY = KryoFactory.getFactory();
 
+	@Override
 	public byte[] serialize(T t) {
-		Kryo kryo = kryoFactory.getKryo();
+		Kryo kryo = KRYO_FACTORY.getKryo();
 		try {
 			Output output = new Output(1024, 1024 * 500);
 			kryo.writeClassAndObject(output, t);
 			return output.toBytes();
 		} finally {
-			kryoFactory.returnKryo(kryo);
+			KRYO_FACTORY.returnKryo(kryo);
 		}
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public T deserialize(byte[] bytes){
 		if(bytes == null || bytes.length == 0){
 			return null;
 		}
-		Kryo kryo = kryoFactory.getKryo();
+		Kryo kryo = KRYO_FACTORY.getKryo();
 		try {
 			Input input = new Input(bytes);
 			return (T) kryo.readClassAndObject(input);
 		} finally {
-			kryoFactory.returnKryo(kryo);
+			KRYO_FACTORY.returnKryo(kryo);
 		}
 	}
 }

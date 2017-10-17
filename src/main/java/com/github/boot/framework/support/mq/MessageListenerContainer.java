@@ -18,7 +18,7 @@ public abstract class MessageListenerContainer implements ApplicationContextAwar
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MessageListenerContainer.class);
 
-	protected Map<MessageTopic,List<MessageListener<Message>>> listenerMap =  new HashMap<>();
+	protected Map<MessageTopic,List<MessageListener<AbstractMessage>>> listenerMap =  new HashMap<>();
 	
 	/**
 	 * 关闭监听容器
@@ -29,7 +29,7 @@ public abstract class MessageListenerContainer implements ApplicationContextAwar
 	 * 根据监听频道获取监听器
 	 * @return
 	 */
-	public List<MessageListener<Message>> getListeners(MessageTopic topic){
+	public List<MessageListener<AbstractMessage>> getListeners(MessageTopic topic){
 		return this.listenerMap.get(topic);
 	}
 
@@ -52,9 +52,9 @@ public abstract class MessageListenerContainer implements ApplicationContextAwar
 		Map<String, MessageListener> map = applicationContext.getBeansOfType(MessageListener.class);
 		for (MessageListener listener : map.values()) {
 			ParameterizedType type = (ParameterizedType) listener.getClass().getGenericInterfaces()[0];
-			Class<Message> clazz = (Class<Message>) type.getActualTypeArguments()[0];
+			Class<AbstractMessage> clazz = (Class<AbstractMessage>) type.getActualTypeArguments()[0];
 			MessageTopic channel = getMessageTopic(clazz);
-			List<MessageListener<Message>> listeners = listenerMap.get(channel);
+			List<MessageListener<AbstractMessage>> listeners = listenerMap.get(channel);
 			if(listeners == null){
 				listeners = new ArrayList<>();
 			}
@@ -69,7 +69,7 @@ public abstract class MessageListenerContainer implements ApplicationContextAwar
 	 * @param clazz 消息体类型
 	 * @return
 	 */
-	private MessageTopic getMessageTopic(Class<? extends Message> clazz){
+	private MessageTopic getMessageTopic(Class<? extends AbstractMessage> clazz){
 		MessageTopic channel = clazz.getAnnotation(MessageTopic.class);
 		if(channel == null){
 			throw new RuntimeException("消息实体没有设置消息发送主题: " + clazz.getName());

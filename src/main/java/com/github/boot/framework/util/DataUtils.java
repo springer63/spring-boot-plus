@@ -1,16 +1,7 @@
 package com.github.boot.framework.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -20,6 +11,8 @@ import java.util.regex.Pattern;
  * @author ChenJianhui
  */
 public class DataUtils {
+
+	private final static Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+");
 	
 	/**
 	 * 指定长度数字生成器
@@ -115,8 +108,7 @@ public class DataUtils {
 	 * @return
 	 */
 	public static boolean isNumeric(String str){  
-	    Pattern pattern = Pattern.compile("^[0-9]*$");  
-	    return pattern.matcher(str).matches();     
+	    return NUMBER_PATTERN.matcher(str).matches();
 	}  
 	
 	/**
@@ -127,7 +119,7 @@ public class DataUtils {
 	 */
 	public static int randomInt(int min, int max){
 		Random random = new Random();
-	    int num = random.nextInt(max-min+1) + min ;
+	    int num = random.nextInt(max - min + 1) + min ;
 	    return num;
 	}
 	
@@ -139,75 +131,5 @@ public class DataUtils {
     	return UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
     }
     
-    /** 
-     * 除去数组中的空值和签名参数
-     * @param sArray 签名参数组
-     * @return 去掉空值与签名参数后的新签名参数组
-     */
-    public static Map<String, Object> paraFilter(Map<String, Object> sArray) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        if (sArray == null || sArray.size() <= 0) {
-            return result;
-        }
-        for (String key : sArray.keySet()) {
-        	if(sArray.get(key) != null){
-	            String value = sArray.get(key).toString();
-	            if (value == null || value.equals("") || key.equalsIgnoreCase("sign")
-	                || key.equalsIgnoreCase("sign_type") || key.equalsIgnoreCase("signature")) {
-	                continue;
-	            }
-	            result.put(key, value);
-        	}
-        }
-        return result;
-    }
-        
-    /** 
-     * 把数组所有元素排序，并按照“参数=参数值”的模式用“&”字符拼接成字符串
-     * @param params 需要排序并参与字符拼接的参数组
-     * @return 拼接后字符串
-     */
-    public static String createLinkString(Map<String, Object> params) {
-        List<String> keys = new ArrayList<String>(params.keySet());
-        Collections.sort(keys);
-        String prestr = "";
-        for (int i = 0; i < keys.size(); i++) {
-            String key = keys.get(i);
-            String value = params.get(key).toString();
-            if (i == keys.size() - 1) {//拼接时，不包括最后一个&字符
-                prestr = prestr + key + "=" + value;
-            } else {
-                prestr = prestr + key + "=" + value + "&";
-            }
-        }
-        return prestr;
-    }
-    /** 
-     * 功能：生成签名结果
-    * @param sArray 要签名的数组
-    * @param key 安全校验码
-    * @return 签名结果字符串
-    */
-	public static String buildMysign(Map<String,Object> sArray, String key) {
-		String prestr = createLinkString(sArray);  //把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
-		prestr = prestr + key;                     //把拼接后的字符串再与安全校验码直接连接起来(key 双方确定好的秘钥)
-		System.out.println(prestr);
-		String signature = md5(prestr);
-		return signature;
-	}
 
-	public static String leftPaddingZero(int num,int length){
-		String numStr = String.valueOf(num);
-		if(numStr.length() < length){
-			for(int i= 0 ;i <= length - numStr.length() ; i++){
-				numStr = "0"+numStr;
-			}
-		}
-		return numStr;
-	}
-	public static String generateSN(Long id) {
-		Random random = new Random(id);
-		return leftPaddingZero(random.nextInt(1000000),6) + leftPaddingZero(random.nextInt(10000),4);
-	}
-	
 }

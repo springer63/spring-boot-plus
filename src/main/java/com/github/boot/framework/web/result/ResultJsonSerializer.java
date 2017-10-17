@@ -45,7 +45,9 @@ public class ResultJsonSerializer extends ObjectMapper {
      * @param excludes 转换时过滤哪些字段
      */
     public void filter(Class<?> clazz, String[] includes, String[] excludes) {
-        if (clazz == null) return;
+        if (clazz == null){
+            return;
+        }
         if (includes != null && includes.length > 0) {
             this.setFilterProvider(new SimpleFilterProvider().addFilter(DYNC_INCLUDE,
                     SimpleBeanPropertyFilter.filterOutAllExcept(includes)));
