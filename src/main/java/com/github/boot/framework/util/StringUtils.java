@@ -12,6 +12,9 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * 字符串工具类
+ *
+ * @author chenjianhui
+ * @date 2017/03/15
  */
 public class StringUtils {
 	
@@ -119,7 +122,6 @@ public class StringUtils {
 	 * @throws PatternSyntaxException
 	 */
 	public static String strFilter(String str) throws PatternSyntaxException {
-		// 清除掉所有特殊字符
 		String regEx = "[`~!@#$%^&*()+=|{}':;',//[//].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 		Pattern p = Pattern.compile(regEx);
 		Matcher m = p.matcher(str);
@@ -233,8 +235,11 @@ public class StringUtils {
 		return s.substring(0, 1).toUpperCase() + s.substring(1);
 	}
 	
-	
-	//Unicode转中文  
+	/**
+	 * Unicode转中文
+	 * @param dataStr
+	 * @return
+	 */
     public static String decodeUnicode(final String dataStr) {     
        int start = 0;     
        int end = 0;     

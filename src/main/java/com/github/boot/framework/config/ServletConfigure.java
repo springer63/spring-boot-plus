@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.github.boot.framework.util.spring.ApplicationContextUtils;
+import com.github.boot.framework.support.spring.ApplicationContextUtils;
 import com.github.boot.framework.web.interceptor.ResubmitInterceptor;
 import com.github.boot.framework.web.listener.ContextLoadedListener;
 import com.github.boot.framework.web.result.ReturnJsonHandler;

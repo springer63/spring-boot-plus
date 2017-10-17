@@ -1,4 +1,4 @@
-package com.github.boot.framework.util.spring;
+package com.github.boot.framework.support.spring;
 
 import org.springframework.context.ApplicationContext;
 

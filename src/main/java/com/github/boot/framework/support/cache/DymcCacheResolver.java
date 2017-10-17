@@ -1,7 +1,7 @@
 package com.github.boot.framework.support.cache;
 
 import com.github.boot.framework.util.ValidUtils;
-import com.github.boot.framework.util.spring.ApplicationContextUtils;
+import com.github.boot.framework.support.spring.ApplicationContextUtils;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.interceptor.CacheOperationInvocationContext;

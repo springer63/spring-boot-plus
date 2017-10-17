@@ -4,6 +4,8 @@ import java.util.Collection;
 
 /**
  * 校验工具类
+ * @author chenjianhui
+ * @date 2017/03/15
  */
 public class ValidUtils {
 	
