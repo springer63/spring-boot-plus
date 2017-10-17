@@ -5,7 +5,7 @@ import com.github.boot.framework.jpa.Criterion;
 import com.github.boot.framework.jpa.Order;
 import com.github.boot.framework.jpa.Orders;
 import com.github.boot.framework.jpa.spec.PredicateBuilder;
-import com.github.boot.framework.web.form.PageForm;
+import com.github.boot.framework.web.form.AbstractPageForm;
 import com.github.boot.framework.jpa.spec.Specifications;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +36,7 @@ public class SpecUtils {
      * @param <T>
      * @return
      */
-    public static <T> Pageable pageable(PageForm<T> form){
+    public static <T> Pageable pageable(AbstractPageForm<T> form){
         Sort sort = null;
         Order order = form.getClass().getAnnotation(Order.class);
         if(order != null){
@@ -60,9 +60,9 @@ public class SpecUtils {
             sort = new Sort(orderList);
         }
         if(sort == null){
-            return new PageRequest(form.getPage(), form.getCount());
+            return new PageRequest(form.getPage(), form.getSize());
         }
-        return new PageRequest(form.getPage(), form.getCount(), sort);
+        return new PageRequest(form.getPage(), form.getSize(), sort);
     }
 
     /**

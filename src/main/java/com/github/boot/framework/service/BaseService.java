@@ -1,6 +1,6 @@
 package com.github.boot.framework.service;
 
-import com.github.boot.framework.web.form.PageForm;
+import com.github.boot.framework.web.form.AbstractPageForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,7 +41,7 @@ public interface BaseService<T, ID extends Serializable> {
 	 * @param form
 	 * @return
 	 */
-	Page<T> page(PageForm<T> form);
+	Page<T> page(AbstractPageForm<T> form);
 	
 	/**
 	 * 根据ID查询一个实体

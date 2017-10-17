@@ -71,12 +71,4 @@ public interface BaseDao<T, ID extends Serializable> extends JpaRepository<T, ID
 	 */
     int batchSave(List<T> entites);
 
-	/**
-	 * 批量更新
-	 * @param sql
-	 * @param params
-	 * @return
-	 */
-	int executeBatchBySQL(String sql, List<Object[]> params);
-
 }

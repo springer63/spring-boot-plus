@@ -103,7 +103,9 @@ public class BaseDaoImpl<T, ID extends Serializable> extends SimpleJpaRepository
 
 	@Override
 	public long count(T t){
-		if(t == null) return 0;
+		if(t == null){
+			return 0;
+		}
 		this.count(buildSpec(t));
 		return 0;
 	}
@@ -184,24 +186,6 @@ public class BaseDaoImpl<T, ID extends Serializable> extends SimpleJpaRepository
 		Query q = entityManager.createNativeQuery(buffer.deleteCharAt(buffer.length() - 1).append(';').toString());
 		for(int i = 0 ; i < params.length ; i ++){
 			q.setParameter(i+1,  params[i]);
-		}
-		return q.executeUpdate();
-	}
-
-	@Override
-	@Deprecated
-	public int executeBatchBySQL(String sql, List<Object[]> params) {
-		StringBuffer buffer = new StringBuffer();
-		List<Object> paramList = new ArrayList<>(params.size() * 2);
-		for (Object[] paramArr : params){
-			buffer.append(";").append(sql);
-			for (Object p : paramArr){
-				paramList.add(p);
-			}
-		}
-		Query q = entityManager.createNativeQuery(buffer.deleteCharAt(0).toString());
-		for(int i = 0 ; i < paramList.size() ; i ++){
-			q.setParameter(i+1,  paramList.get(i));
 		}
 		return q.executeUpdate();
 	}

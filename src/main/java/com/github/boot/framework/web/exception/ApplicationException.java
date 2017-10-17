@@ -10,14 +10,14 @@ public class ApplicationException extends RuntimeException{
 
 	private static final long serialVersionUID = -7883840067913852752L;
 
-	private String code;
+	private int code;
 
-	public ApplicationException(String code, String message) {
+	public ApplicationException(int code, String message) {
 		super(message);
 		this.code = code;
 	}
 
-	public String getCode() {
+	public int getCode() {
 		return code;
 	}
 

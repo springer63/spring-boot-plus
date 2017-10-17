@@ -46,25 +46,25 @@ public class GlobalExceptionHandler extends BasicErrorController {
 	}
 
 	@OAuth(required = false)
-	@RequestMapping(Result.NOT_OAUTH)
+	@RequestMapping("/" + Result.NOT_OAUTH)
 	public Result unauthorized(){
 		return Result.unauthorized();
 	}
 
 	@OAuth(required = false)
-	@RequestMapping(Result.PERMISSION_DENIED)
+	@RequestMapping("/" + Result.PERMISSION_DENIED)
 	public Result permissionDenied(){
 		return Result.permissionDenied();
 	}
 
 	@OAuth(required = false)
-	@RequestMapping(Result.INVALID_PARAM)
+	@RequestMapping("/" + Result.INVALID_PARAM)
 	public Result invalidParam(ModelMap modelMap){
 		return new Result(Result.INVALID_PARAM, modelMap.get("message").toString());
 	}
 
 	@OAuth(required = false)
-	@RequestMapping(Result.SYSTEM_BUSY)
+	@RequestMapping("/" + Result.SYSTEM_BUSY)
 	public Result systemBusy() {
 		return Result.systemBusy();
 	}
@@ -90,8 +90,8 @@ public class GlobalExceptionHandler extends BasicErrorController {
 		}
 		if(throwable instanceof ApplicationException){
 			ApplicationException ex = (ApplicationException) throwable;
-			result.setErrcode(ex.getCode());
-			result.setErrmsg(ex.getMessage());
+			result.setStatus(ex.getCode());
+			result.setMessage(ex.getMessage());
 			logger.info("{} at {}", ex.getMessage(), ex.getCause().getStackTrace()[0].toString());
 		}else {
 			logger.error("未知异常：" + ExceptionUtils.getFullStackTrace(throwable));

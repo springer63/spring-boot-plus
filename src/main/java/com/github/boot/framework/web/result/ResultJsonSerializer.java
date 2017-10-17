@@ -23,13 +23,12 @@ public class ResultJsonSerializer extends ObjectMapper {
     public ResultJsonSerializer() {
         //Hibernate5Module hm = new Hibernate5Module();
         //hm.configure(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION, false);
-        //registerModule(hm);
-        //不序列化空对象
-        disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        //this.registerModule(hm);
+        this.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         this.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         this.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         //支持JSON格式提交可以多字段或少字段
-        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @JsonFilter(DYNC_EXCLUDE)
