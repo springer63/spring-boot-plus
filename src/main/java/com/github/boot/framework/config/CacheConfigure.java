@@ -2,7 +2,7 @@ package com.github.boot.framework.config;
 
 import com.github.boot.framework.support.cache.CacheKeyGenerator;
 import com.github.boot.framework.support.cache.CacheTime;
-import com.github.boot.framework.util.PackageScanUtils;
+import com.github.boot.framework.util.PackageUtils;
 import org.redisson.api.RedissonClient;
 import org.redisson.spring.cache.CacheConfig;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
@@ -36,7 +36,7 @@ public class CacheConfigure extends CachingConfigurerSupport {
 
     @Bean
     public CacheManager cacheManager(RedissonClient redissonClient) throws Exception{
-        Set<Class<?>> classes = new PackageScanUtils(cachePackges.split(","), org.springframework.cache.annotation.CacheConfig.class).scan();
+        Set<Class<?>> classes = new PackageUtils(cachePackges.split(","), org.springframework.cache.annotation.CacheConfig.class).scan();
         Map<String, CacheConfig> configMap = new HashMap<String, CacheConfig>(classes.size());
         CacheConfig baseConfig = new CacheConfig(24 * 60 * 1000, 12 * 60 * 1000);
         for (Class<?> clazz: classes){

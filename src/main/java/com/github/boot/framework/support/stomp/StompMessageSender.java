@@ -1,4 +1,4 @@
-package com.github.boot.framework.util.stomp;
+package com.github.boot.framework.support.stomp;
 
 import com.github.boot.framework.support.mq.*;
 import org.slf4j.Logger;
@@ -8,7 +8,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /**
  * 基于 STOMP 协议 WebSocket 消息发送工具类
- * Created by cjh on 2017/6/24.
+ *
+ * @author cjh
+ * @date 2017/6/24
  */
 public class StompMessageSender implements MessageListener<StompMessageSender.StompMessage> {
 

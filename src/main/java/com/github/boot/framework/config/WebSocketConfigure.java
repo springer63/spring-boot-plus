@@ -2,7 +2,7 @@ package com.github.boot.framework.config;
 
 import com.github.boot.framework.util.ConstUtils;
 import com.github.boot.framework.util.ServletUtils;
-import com.github.boot.framework.util.stomp.StompMessageSender;
+import com.github.boot.framework.support.stomp.StompMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

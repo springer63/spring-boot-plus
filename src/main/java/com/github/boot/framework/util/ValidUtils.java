@@ -13,10 +13,19 @@ public class ValidUtils {
 	 * 判断字符串有效性
 	 */
 	public static boolean isValid(String src){
-		if(src == null || "".equals(src.trim())){
+		if(src == null || "".equals(src)){
 			return false ;
 		}
 		return true ;
+	}
+
+	/**
+	 * 判断Boolean值
+	 * @param bool
+	 * @return
+	 */
+	public static boolean isValid(Boolean bool){
+		return bool != null && bool;
 	}
 	
 	/**
@@ -56,8 +65,6 @@ public class ValidUtils {
 	public static boolean isValidEmail(String email){
 		return isValid(email) && email.matches("(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w{2,3}){1,3})");
 	}
-	
-	public static boolean isValid(Boolean bool){
-		return bool != null && bool;
-	}
+
+
 }

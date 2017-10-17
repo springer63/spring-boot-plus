@@ -1,6 +1,5 @@
-package com.github.boot.framework.util.image;
+package com.github.boot.framework.util;
 
-import com.github.boot.framework.util.DataUtils;
 import com.sun.imageio.plugins.gif.GIFImageReader;
 import com.sun.imageio.plugins.gif.GIFImageReaderSpi;
 import org.apache.commons.codec.binary.Base64;

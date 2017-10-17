@@ -1,12 +1,5 @@
 package com.github.boot.framework.util;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -17,6 +10,13 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.ClassUtils;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 
 /**
  * @Description 包扫描工具
@@ -24,7 +24,7 @@ import org.springframework.util.ClassUtils;
  * @version 1.0
  * @date：2016年4月12日 上午10:36:05
  */
-public class PackageScanUtils {
+public class PackageUtils {
 
 	private static final String RESOURCE_PATTERN = "/**/*.class";
 	
@@ -42,7 +42,7 @@ public class PackageScanUtils {
 	 * @param annotationFilter 指定扫描包中含有特定注解标记的bean,支持多个注解
 	 */
 	@SafeVarargs
-	public PackageScanUtils(String[] packagesToScan, Class<? extends Annotation>... annotationFilter){
+	public PackageUtils(String[] packagesToScan, Class<? extends Annotation>... annotationFilter){
 		if (packagesToScan != null) {
 			for (String packagePath : packagesToScan) {
 				this.packagesList.add(packagePath);
