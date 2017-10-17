@@ -19,7 +19,7 @@ public class Kryox extends Kryo {
 
 	private final ReflectionFactory REFLECTION_FACTORY = ReflectionFactory.getReflectionFactory();
 
-    private final ConcurrentHashMap<Class<?>, Constructor<?>> _constructors = new ConcurrentHashMap<Class<?>, Constructor<?>>();
+    private final ConcurrentHashMap<Class<?>, Constructor<?>> constructors = new ConcurrentHashMap<Class<?>, Constructor<?>>();
 
     public Kryox(){
         registerSerializers(this);
@@ -49,10 +49,10 @@ public class Kryox extends Kryo {
 
     @SuppressWarnings("unchecked")
     public <T> T newInstanceFromReflectionFactory(Class<T> type) {
-        Constructor<?> constructor = _constructors.get(type);
+        Constructor<?> constructor = constructors.get(type);
         if (constructor == null) {
             constructor = newConstructorForSerialization(type);
-            Constructor<?> saved = _constructors.putIfAbsent(type, constructor);
+            Constructor<?> saved = constructors.putIfAbsent(type, constructor);
             if(saved!=null){
                 constructor=saved;
             }

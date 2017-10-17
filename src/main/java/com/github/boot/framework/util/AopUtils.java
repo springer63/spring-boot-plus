@@ -49,10 +49,10 @@ public class AopUtils {
         try {
             Field h = proxy.getClass().getSuperclass().getDeclaredField("h");
             h.setAccessible(true);
-            Object proxy_ = h.get(proxy);
-            Field f = proxy_.getClass().getDeclaredField("target");
+            Object proxyObj = h.get(proxy);
+            Field f = proxyObj.getClass().getDeclaredField("target");
             f.setAccessible(true);
-            return (T) f.get(proxy_);
+            return (T) f.get(proxyObj);
         }
         catch (Exception e) {
             throw new RuntimeException(e);

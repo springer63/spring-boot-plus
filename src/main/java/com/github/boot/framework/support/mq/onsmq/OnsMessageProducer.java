@@ -105,8 +105,8 @@ public class OnsMessageProducer implements InitializingBean , DisposableBean, Me
 	 */
 	private Message createONSMessage(AbstractMessage message){
 		Message onsMsg = new Message(message.topic(), "*", message.getKey(), serializer.serialize(message));
-		if(message instanceof  ScheduledMessage){
-			Long deliverTime = ((ScheduledMessage)message).getDeliverTime();
+		if(message instanceof AbstractScheduledMessage){
+			Long deliverTime = ((AbstractScheduledMessage)message).getDeliverTime();
 			long currMillis = System.currentTimeMillis();
 			if(deliverTime - currMillis > MSG_MAX_STORE_TIME){
 				deliverTime = currMillis + MSG_MAX_STORE_TIME;

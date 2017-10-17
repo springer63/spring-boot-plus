@@ -3,7 +3,7 @@ package com.github.boot.framework.support.mq.onsmq;
 import com.aliyun.openservices.ons.api.*;
 import com.github.boot.framework.support.mq.AbstractMessage;
 import com.github.boot.framework.support.mq.MessageListener;
-import com.github.boot.framework.support.mq.MessageListenerContainer;
+import com.github.boot.framework.support.mq.AbstractMessageListenerContainer;
 import com.github.boot.framework.support.mq.MessageTopic;
 import com.github.boot.framework.support.serializer.Serializer;
 import com.github.boot.framework.util.JsonUtils;
@@ -22,7 +22,7 @@ import java.util.Set;
  * @author cjh
  * @version 1.0
  */
-public class OnsMessageListenerContainer extends MessageListenerContainer implements InitializingBean, DisposableBean {
+public class OnsMessageListenerContainer extends AbstractMessageListenerContainer implements InitializingBean, DisposableBean {
 
 	private final static Logger logger = LoggerFactory.getLogger(OnsMessageListenerContainer.class);
 
@@ -87,8 +87,8 @@ public class OnsMessageListenerContainer extends MessageListenerContainer implem
 			try {
 				AbstractMessage message = serializer.deserialize(onsMsg.getBody());
 				logger.info("接收消息成功TOPIC:{}, ID:{}, CONTENT:{}", message.topic(), onsMsg.getMsgID(), JsonUtils.toJson(message));
-				if(message instanceof ScheduledMessage && producer != null){
-					ScheduledMessage scheduledMessage = (ScheduledMessage) message;
+				if(message instanceof AbstractScheduledMessage && producer != null){
+					AbstractScheduledMessage scheduledMessage = (AbstractScheduledMessage) message;
 					if(scheduledMessage.getDeliverTime() - System.currentTimeMillis() > OnsMessageProducer.MSG_MAX_STORE_TIME){
 						producer.sendAsync(message);
 					}

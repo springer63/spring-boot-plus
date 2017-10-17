@@ -1,16 +1,11 @@
 package com.github.boot.framework.util;
 
+import org.springframework.beans.BeanWrapperImpl;
+
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.Date;
 import java.util.HashMap;
-
-import org.springframework.beans.BeanWrapperImpl;
 
 
 /**
@@ -254,7 +249,7 @@ public class ReflectionUtils {
 				continue;
 			}
 			String upperCaseName = methodName.substring(3);
-			if(upperCaseName.equals("Class")){
+			if("Class".equals(upperCaseName)){
 				continue;
 			}
 			char[] chars  = upperCaseName.toCharArray();
@@ -402,7 +397,7 @@ public class ReflectionUtils {
 		StringBuffer buffer = new StringBuffer();
 		BeanWrapperImpl wrapper = new BeanWrapperImpl(object);
 		for (PropertyDescriptor pd : wrapper.getPropertyDescriptors()){
-			if(pd.getReadMethod().getName().equals("getClass")){
+			if("getClass".equals(pd.getReadMethod().getName())){
 				continue;
 			}
 			Object propertyValue = wrapper.getPropertyValue(pd.getName());

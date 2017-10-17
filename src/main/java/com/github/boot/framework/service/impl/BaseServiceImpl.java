@@ -21,7 +21,7 @@ import java.util.List;
  * @author ChenJianhui
  * @param <T>
  */
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 public abstract class BaseServiceImpl<T, ID extends Serializable> implements BaseService<T, ID> {
 	
 	@Autowired(required = false)
@@ -118,13 +118,6 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
 		return dao.count(spec);
 	}
 
-	@Override
-	@Transactional
-	@Deprecated
-	public T save(T entity) {
-		return dao.save(entity);
-	}
-	
 	@Override
 	@Transactional
 	public T insert(T entity) {

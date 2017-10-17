@@ -2,7 +2,7 @@ package com.github.boot.framework.support.mq.rocketmq;
 
 import com.github.boot.framework.support.mq.AbstractMessage;
 import com.github.boot.framework.support.mq.MessageListener;
-import com.github.boot.framework.support.mq.MessageListenerContainer;
+import com.github.boot.framework.support.mq.AbstractMessageListenerContainer;
 import com.github.boot.framework.support.mq.MessageTopic;
 import com.github.boot.framework.support.serializer.JacksonSerializer;
 import com.github.boot.framework.support.serializer.Serializer;
@@ -27,7 +27,7 @@ import java.util.List;
  * Rocket MQ Listener Container
  * Created by cjh on 2017/3/15.
  */
-public class RocketMessageListenerContainer extends MessageListenerContainer implements InitializingBean, DisposableBean {
+public class RocketMessageListenerContainer extends AbstractMessageListenerContainer implements InitializingBean, DisposableBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RocketMessageListenerContainer.class);
 

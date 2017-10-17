@@ -117,20 +117,20 @@ public class ImageUtils {
 	 * @param new_h
 	 *            :压缩后的图片高
 	 */
-	public static File compressImage(BufferedImage src, File outFile, int new_w, int new_h) throws IOException {
+	public static File compressImage(BufferedImage src, File outFile, int newWidth, int newHeigth) throws IOException {
 		BufferedImage newImg = null;
 		// 判断输入图片的类型
 		if (src.getType() == 13) {
-			newImg = new BufferedImage(new_w, new_h, BufferedImage.TYPE_4BYTE_ABGR);
+			newImg = new BufferedImage(newWidth, newHeigth, BufferedImage.TYPE_4BYTE_ABGR);
 		} else {
-			newImg = new BufferedImage(new_w, new_h, BufferedImage.TYPE_INT_RGB);
+			newImg = new BufferedImage(newWidth, newHeigth, BufferedImage.TYPE_INT_RGB);
 		}
 		Graphics2D g = newImg.createGraphics();
 		// 从原图上取颜色绘制新图
 		g.drawImage(src, 0, 0, src.getWidth(), src.getHeight(), null);
 		g.dispose();
 		// 根据图片尺寸压缩比得到新图的尺寸
-		newImg.getGraphics().drawImage(src.getScaledInstance(new_w, new_h, Image.SCALE_SMOOTH), 0, 0, null);
+		newImg.getGraphics().drawImage(src.getScaledInstance(newWidth, newHeigth, Image.SCALE_SMOOTH), 0, 0, null);
 		ImageIO.write(newImg, "jpg", outFile);
 		return outFile;
 	}
@@ -145,20 +145,20 @@ public class ImageUtils {
 	 * @param new_h
 	 *            :压缩后的图片高
 	 */
-	public static BufferedImage compressImage(BufferedImage src, int new_w, int new_h) throws IOException {
+	public static BufferedImage compressImage(BufferedImage src, int newWidth, int newHeigth) throws IOException {
 		BufferedImage newImg = null;
 		// 判断输入图片的类型
 		if (src.getType() == 13) {
-			newImg = new BufferedImage(new_w, new_h, BufferedImage.TYPE_4BYTE_ABGR);
+			newImg = new BufferedImage(newWidth, newHeigth, BufferedImage.TYPE_4BYTE_ABGR);
 		} else {
-			newImg = new BufferedImage(new_w, new_h, BufferedImage.TYPE_INT_RGB);
+			newImg = new BufferedImage(newWidth, newHeigth, BufferedImage.TYPE_INT_RGB);
 		}
 		Graphics2D g = newImg.createGraphics();
 		// 从原图上取颜色绘制新图
 		g.drawImage(src, 0, 0, src.getWidth(), src.getHeight(), null);
 		g.dispose();
 		// 根据图片尺寸压缩比得到新图的尺寸
-		newImg.getGraphics().drawImage(src.getScaledInstance(new_w, new_h, Image.SCALE_SMOOTH), 0, 0, null);
+		newImg.getGraphics().drawImage(src.getScaledInstance(newWidth, newHeigth, Image.SCALE_SMOOTH), 0, 0, null);
 		return newImg;
 	}
 
@@ -419,16 +419,16 @@ public class ImageUtils {
 			BufferedImage imageTwo = ImageIO.read(secondSrcImage);
 			int width2 = imageTwo.getWidth();
 			int height2 = imageTwo.getHeight();
-			int[] ImageArrayTwo = new int[width2 * height2];
-			ImageArrayTwo = imageTwo.getRGB(0, 0, width, height, ImageArrayTwo, 0, width);
+			int[] imageArrayTwo = new int[width2 * height2];
+			imageArrayTwo = imageTwo.getRGB(0, 0, width, height, imageArrayTwo, 0, width);
 			// 生成新图片
 			// int height3 = (height>height2 || height==height2)?height:height2;
 			BufferedImage imageNew = new BufferedImage(width * 2, height, BufferedImage.TYPE_INT_RGB);
 			// BufferedImage imageNew = new
 			// BufferedImage(width+width2,height3,BufferedImage.TYPE_INT_RGB);
 			imageNew.setRGB(0, 0, width, height, imageArrayOne, 0, width);// 设置左半部分的RGB
-			imageNew.setRGB(width, 0, width, height, ImageArrayTwo, 0, width);// 设置右半部分的RGB
-			// imageNew.setRGB(width,0,width2,height2,ImageArrayTwo,0,width2);//设置右半部分的RGB
+			imageNew.setRGB(width, 0, width, height, imageArrayTwo, 0, width);// 设置右半部分的RGB
+			// imageNew.setRGB(width,0,width2,height2,imageArrayTwo,0,width2);//设置右半部分的RGB
 			File joinImage = File.createTempFile(DataUtils.uuidStr(), "jpg");
 			ImageIO.write(imageNew, imageFormat, joinImage);// 写图片
 		} catch (Exception e) {
@@ -462,16 +462,19 @@ public class ImageUtils {
 			compressImage(img2, w1, h1);
 		}
 		// 从图片中读取RGB
-		int[] ImageArrayOne = new int[w1 * h1];
-		ImageArrayOne = img1.getRGB(0, 0, w1, h1, ImageArrayOne, 0, w1); // 逐行扫描图像中各个像素的RGB到数组中
-		int[] ImageArrayTwo = new int[w1 * h1];
-		ImageArrayTwo = img2.getRGB(0, 0, w1, h1, ImageArrayTwo, 0, w1);
+		int[] imageArrayOne = new int[w1 * h1];
+		// 逐行扫描图像中各个像素的RGB到数组中
+		imageArrayOne = img1.getRGB(0, 0, w1, h1, imageArrayOne, 0, w1);
+		int[] imageArrayTwo = new int[w1 * h1];
+		imageArrayTwo = img2.getRGB(0, 0, w1, h1, imageArrayTwo, 0, w1);
 		// 生成新图片
 		BufferedImage destImage = new BufferedImage(w1 + w1, h1, BufferedImage.TYPE_INT_RGB);
-		destImage.setRGB(0, 0, w1, h1, ImageArrayOne, 0, w1); // 设置上半部分或左半部分的RGB
-		destImage.setRGB(w1, 0, w1, h1, ImageArrayTwo, 0, w1);
+		// 设置上半部分或左半部分的RGB
+		destImage.setRGB(0, 0, w1, h1, imageArrayOne, 0, w1);
+		destImage.setRGB(w1, 0, w1, h1, imageArrayTwo, 0, w1);
 		File joinImage = File.createTempFile(DataUtils.uuidStr(), imageFormat);
-		ImageIO.write(destImage, imageFormat, joinImage);// 写图片
+		// 写图片
+		ImageIO.write(destImage, imageFormat, joinImage);
 		return joinImage;
 	}
 
@@ -493,8 +496,10 @@ public class ImageUtils {
 			// 读取第一张图片
 			File fileOne = new File(firstSrcImagePath);
 			BufferedImage imageOne = ImageIO.read(fileOne);
-			int width = imageOne.getWidth();// 图片宽度
-			int height = imageOne.getHeight();// 图片高度
+			// 图片宽度
+			int width = imageOne.getWidth();
+			// 图片高度
+			int height = imageOne.getHeight();
 			// 从图片中读取RGB
 			int[] imageArrayOne = new int[width * height];
 			imageArrayOne = imageOne.getRGB(0, 0, width, height, imageArrayOne, 0, width);
@@ -504,13 +509,16 @@ public class ImageUtils {
 			BufferedImage imageTwo = ImageIO.read(fileTwo);
 			int width2 = imageTwo.getWidth();
 			int height2 = imageTwo.getHeight();
-			int[] ImageArrayTwo = new int[width2 * height2];
-			ImageArrayTwo = imageTwo.getRGB(0, 0, width, height, ImageArrayTwo, 0, width);
+			int[] imageArrayTwo = new int[width2 * height2];
+			imageArrayTwo = imageTwo.getRGB(0, 0, width, height, imageArrayTwo, 0, width);
 			BufferedImage imageNew = new BufferedImage(width, height * 2, BufferedImage.TYPE_INT_RGB);
-			imageNew.setRGB(0, 0, width, height, imageArrayOne, 0, width);// 设置上半部分的RGB
-			imageNew.setRGB(0, height, width, height, ImageArrayTwo, 0, width);// 设置下半部分的RGB
+			// 设置上半部分的RGB
+			imageNew.setRGB(0, 0, width, height, imageArrayOne, 0, width);
+			// 设置下半部分的RGB
+			imageNew.setRGB(0, height, width, height, imageArrayTwo, 0, width);
 			File outFile = new File(toPath);
-			ImageIO.write(imageNew, imageFormat, outFile);// 写图片
+			// 写图片
+			ImageIO.write(imageNew, imageFormat, outFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -56,7 +56,7 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter{
 				lockedKey = LOCKED_TARGET_PREFIX + request.getRequestURI() + userId;
 				accessKey = ACCESS_COUNT_PREFIX + request.getRequestURI() + userId;
 			}else{
-				if(ip == null || ip.equals("")){
+				if(ip == null || "".equals(ip)){
 					continue;
 				}
 				lockedKey = LOCKED_TARGET_PREFIX + request.getRequestURI() + ip;

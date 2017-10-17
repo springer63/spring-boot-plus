@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
  * @author ChenJianhui
  * @param <T>
  */
-@Transactional
 public interface BaseService<T, ID extends Serializable> {
 	
 	/**
@@ -126,15 +124,7 @@ public interface BaseService<T, ID extends Serializable> {
 	 * @return
 	 */
 	long count(Specification<T> spec) ;
-	
-	/**
-	 * 保存后更新一个实体, 此方法不建议使用， 已经拆成成两个方法 insert()和update()
-	 * @param entity
-	 * @return
-	 */
-	@Deprecated
-	T save(T entity);
-	
+
 	/**
 	 * 保存一个实体
 	 * @param entity

@@ -165,7 +165,7 @@ public class ServletUtils {
 	 */
 	public static String getContextUrl(HttpServletRequest request){
 		StringBuffer url = request.getRequestURL();
-		if(request.getContextPath().equals("/")){
+		if("/".equals(request.getContextPath())){
 			return url.delete(url.length() - request.getRequestURI().length(), url.length()).append(request.getContextPath()).toString();  
 		}else{
 			return url.delete(url.length() - request.getRequestURI().length(), url.length()).append(request.getContextPath()).append("/").toString();  

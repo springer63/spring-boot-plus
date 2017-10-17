@@ -14,9 +14,9 @@ import java.util.*;
  * @author cjh
  * @version 1.0
  */
-public abstract class MessageListenerContainer implements ApplicationContextAware {
+public abstract class AbstractMessageListenerContainer implements ApplicationContextAware {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MessageListenerContainer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMessageListenerContainer.class);
 
 	protected Map<MessageTopic,List<MessageListener<AbstractMessage>>> listenerMap =  new HashMap<>();
 	

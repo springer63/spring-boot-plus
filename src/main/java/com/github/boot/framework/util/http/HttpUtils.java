@@ -661,7 +661,7 @@ public class HttpUtils {
      * @param cookieStore
      * @return
      */
-    public HttpUtils SetCookieStore(CookieStore cookieStore) {
+    public HttpUtils setCookieStore(CookieStore cookieStore) {
         if (cookieStore == null){
             return this;
         }
