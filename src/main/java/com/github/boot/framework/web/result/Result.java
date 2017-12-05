@@ -1,8 +1,6 @@
 package com.github.boot.framework.web.result;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -16,8 +14,6 @@ import java.io.Serializable;
 public class Result implements Serializable{
 
 	private static final long serialVersionUID = -5759964467525426508L;
-
-	private static final Logger logger = LoggerFactory.getLogger(Result.class);
 
 	//**********************系统全局错误码**************************
 

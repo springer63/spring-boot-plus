@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
 /**
  * 自定义JSON序列化器
- * Created by cjh on 2017/2/27.
+ *
+ * @author cjh
+ * @date 2017/2/27
  */
 public class ResultJsonSerializer extends ObjectMapper {
 
@@ -18,12 +20,9 @@ public class ResultJsonSerializer extends ObjectMapper {
 
 	static final String DYNC_INCLUDE = "DYNC_INCLUDE";
 
-    static final String DYNC_EXCLUDE = "DYNC_EXCLLUDE";
+    static final String DYNC_EXCLUDE = "DYNC_EXCLUDE";
 
     public ResultJsonSerializer() {
-        //Hibernate5Module hm = new Hibernate5Module();
-        //hm.configure(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION, false);
-        //this.registerModule(hm);
         this.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         this.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         this.setSerializationInclusion(JsonInclude.Include.NON_NULL);
