@@ -5,16 +5,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.github.boot.framework.support.spring.ApplicationContextUtils;
+import com.github.boot.framework.web.exception.GlobalExceptionHandler;
+import com.github.boot.framework.web.interceptor.OAuthInterceptor;
 import com.github.boot.framework.web.interceptor.ResubmitInterceptor;
 import com.github.boot.framework.web.listener.ContextLoadedListener;
-import com.github.boot.framework.web.result.ReturnJsonHandler;
-import com.github.boot.framework.web.exception.GlobalExceptionHandler;
-import com.github.boot.framework.web.interceptor.AccessLimitInterceptor;
-import com.github.boot.framework.web.interceptor.OAuthInterceptor;
 import com.github.boot.framework.web.resolver.FormArgumentResolver;
 import com.github.boot.framework.web.resolver.SessionArgumentResolver;
 import com.github.boot.framework.web.result.ResultJsonSerializer;
-import org.redisson.api.RedissonClient;
+import com.github.boot.framework.web.result.ReturnJsonHandler;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
@@ -51,8 +49,8 @@ import java.util.Map;
 @EnableWebMvc
 public class ServletConfigure extends WebMvcConfigurerAdapter implements ApplicationContextAware{
 
-	@Value("${web.cors.domains:*}")
-	private String corsDomains;
+	@Value("${web.cross.domain:*}")
+	private String crossDomain;
 
 	private ApplicationContext applicationContext;
 
@@ -97,7 +95,6 @@ public class ServletConfigure extends WebMvcConfigurerAdapter implements Applica
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new OAuthInterceptor());
 		registry.addInterceptor(new ResubmitInterceptor());
-		registry.addInterceptor(new AccessLimitInterceptor(applicationContext.getBean(RedissonClient.class)));
 		Map<String, HandlerInterceptorAdapter> interceptors = applicationContext.getBeansOfType(HandlerInterceptorAdapter.class);
 		for (HandlerInterceptorAdapter interceptor : interceptors.values()){
 			registry.addInterceptor(interceptor);
@@ -131,7 +128,8 @@ public class ServletConfigure extends WebMvcConfigurerAdapter implements Applica
 		JacksonXmlModule module = new JacksonXmlModule();
 		module.setDefaultUseWrapper(false);
 		XmlMapper xmlMapper = new XmlMapper(module);
-		xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);//设置序列化不包含Java对象中为空的属性
+		//设置序列化不包含Java对象中为空的属性
+		xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
 		xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		MappingJackson2XmlHttpMessageConverter xmlMessageConverter = new MappingJackson2XmlHttpMessageConverter();
 		xmlMessageConverter.setObjectMapper(xmlMapper);
@@ -159,9 +157,9 @@ public class ServletConfigure extends WebMvcConfigurerAdapter implements Applica
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-				.allowedHeaders("x-requested-with", "Authorization")
-				.allowedMethods("GET", "POST", "OPTIONS", "DELETE", "PUT")
-				.allowedOrigins(corsDomains.split(","))
+				.allowedHeaders("*")
+				.allowedMethods("*")
+				.allowedOrigins(crossDomain.split(","))
 				.allowCredentials(true)
 				.maxAge(3600);
 	}
