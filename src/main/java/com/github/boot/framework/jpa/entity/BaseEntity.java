@@ -77,16 +77,14 @@ public class BaseEntity<T> implements Comparable<T>, Serializable{
                 }
 				f.setAccessible(true);
 				Object thisValue = f.get(this);
-				Object otherValue = f.get(this);
+				Object otherValue = f.get(o);
 				if(thisValue == null || otherValue == null){
 					return 0;
 				}
 				if(thisValue instanceof Number){
 					Number num1 = (Number) thisValue;
 					Number num2 = (Number) otherValue;
-					if(num1.intValue() - num2.intValue() <= 0){
-						return 0;
-					}
+					return Long.compare(num1.longValue(), num2.longValue());
 				}
 			}
 		} catch (IllegalAccessException e) {
