@@ -12,7 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import static de.javakaffee.kryoserializers.UnmodifiableCollectionsSerializer.registerSerializers;
 
 /**
- * Created by cjh on 2017/3/28.
+ * 基于Kryo的扩展类
+ * @author cjh
+ * @date 2017/3/28
  */
 @SuppressWarnings("restriction")
 public class Kryox extends Kryo {

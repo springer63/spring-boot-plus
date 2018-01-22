@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 权限过滤拦截器
  * @author ChenJianhui
+ * @date 2017/6/19
  */
 public class OAuthInterceptor extends HandlerInterceptorAdapter{
 	

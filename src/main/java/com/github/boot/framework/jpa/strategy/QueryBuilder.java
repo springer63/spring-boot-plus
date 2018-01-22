@@ -21,7 +21,9 @@ import java.util.regex.Pattern;
 
 /**
  * 查询构建工具
- * Created by cjh on 2017/7/15.
+ *
+ * @author cjh
+ * @date 2017/7/15
  */
 @SuppressWarnings("rawtypes")
 public class QueryBuilder {

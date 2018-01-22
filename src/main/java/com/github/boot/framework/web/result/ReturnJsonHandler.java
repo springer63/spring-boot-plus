@@ -1,7 +1,9 @@
 package com.github.boot.framework.web.result;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.github.boot.framework.util.ConstUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.Ordered;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -9,6 +11,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Json 视图动态过滤
@@ -16,9 +24,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author cjh
  * @date 2017/2/27
  */
-public class ReturnJsonHandler implements HandlerMethodReturnValueHandler{
+public class ReturnJsonHandler implements HandlerMethodReturnValueHandler, Ordered {
 
-    private static final ResultJsonSerializer DEFAULT_RESULT_SERIALIZER = new ResultJsonSerializer();
+    private ResultJsonSerializer jsonSerializer = new ResultJsonSerializer();
+
+    private final Map<String, FilterProvider> filterProviderMap = new ConcurrentHashMap<>();
 
     @Override
     public boolean supportsReturnType(MethodParameter returnType) {
@@ -29,18 +39,56 @@ public class ReturnJsonHandler implements HandlerMethodReturnValueHandler{
     public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
         mavContainer.setRequestHandled(true);
         HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
-        Json json = returnType.getMethodAnnotation(Json.class);
-        ResultJsonSerializer jsonSerializer = DEFAULT_RESULT_SERIALIZER;
-        if(json != null){
-            jsonSerializer = new ResultJsonSerializer();
-            jsonSerializer.filter(json.type(), json.includes(), json.excludes());
-        }
         Result result = (Result) returnValue;
-        result.setUserId(webRequest.getNativeRequest(HttpServletRequest.class).getSession().getAttribute(ConstUtils.SESSION_USER_ID));
+        if(result.getData() == null){
+            Type genericParameterType = returnType.getGenericParameterType();
+            if(genericParameterType instanceof ParameterizedType){
+                ParameterizedType type = (ParameterizedType) genericParameterType;
+                ParameterizedType actualType = (ParameterizedType) type.getActualTypeArguments()[0];
+                Class<?> rawType = (Class<?>) actualType.getRawType();
+                if(Collection.class.isAssignableFrom(rawType)){
+                    result.setData(Collections.EMPTY_LIST);
+                }
+            }
+        }
+        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+        Object userId = request.getSession().getAttribute(ConstUtils.SESSION_USER_ID);
+        result.setUserId(null == userId ? null : Long.valueOf(userId.toString()));
         result.setTimestamp(System.currentTimeMillis());
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-        String jsonStr = jsonSerializer.writeValueAsString(returnValue);
-        response.getWriter().write(jsonStr);
+        Json[] jsonFilters = returnType.getMethod().getAnnotationsByType(Json.class);
+        String resultJson;
+        if(jsonFilters != null && jsonFilters.length > 0){
+            resultJson = jsonSerializer.writer(build(request.getRequestURI(), jsonFilters)).writeValueAsString(returnValue);
+        }else{
+            resultJson = jsonSerializer.writeValueAsString(returnValue);
+        }
+        response.getWriter().write(resultJson);
     }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
+    }
+
+    /**
+     * 构建FilterProvider
+     * @param key
+     * @param jsonFilters
+     * @return
+     */
+    private FilterProvider build(String key, Json[] jsonFilters){
+        FilterProvider provider = filterProviderMap.get(key);
+        if(provider != null){
+            return provider;
+        }
+        synchronized (this){
+            if(provider == null){
+                provider = new DynamicFilterProvider(new DynamicBeanPropertyFilter(jsonFilters));
+            }
+        }
+        return provider;
+    }
+
 }
 

@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
+ * Kryo序列化对象工厂
  * @author cjh
  * @version 1.0
  */

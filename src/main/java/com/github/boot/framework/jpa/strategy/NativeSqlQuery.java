@@ -26,7 +26,9 @@ import java.util.Map;
 
 /**
  * 原生SQL查询
- * Created by cjh on 2017/7/15.
+ *
+ * @author cjh
+ * @date 2017/7/15
  */
 @SuppressWarnings("rawtypes")
 public class NativeSqlQuery extends AbstractJpaQuery {

@@ -9,7 +9,7 @@ import javax.validation.constraints.Min;
 /**
  * 分页查询表单
  *
- * @author dell
+ * @author chenjianhui
  * @date 2017/3/15
  */
 public abstract class AbstractPageForm<T> implements Form, Criterion<T> {

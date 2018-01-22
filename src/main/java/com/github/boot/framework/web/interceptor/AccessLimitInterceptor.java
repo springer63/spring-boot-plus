@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 接口访问频率控制拦截器
  * @author ChenJianhui
+ * @date 2017/6/19
  */
 public class AccessLimitInterceptor extends HandlerInterceptorAdapter{
 

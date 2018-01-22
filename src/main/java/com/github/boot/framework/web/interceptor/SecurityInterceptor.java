@@ -13,7 +13,9 @@ import java.util.Set;
 
 /**
  * 资源权限控制拦截器
- * Created by cjh on 2017/9/14.
+ *
+ * @author cjh
+ * @date 2017/9/14
  */
 public class SecurityInterceptor extends HandlerInterceptorAdapter {
 

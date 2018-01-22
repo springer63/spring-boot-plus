@@ -90,7 +90,7 @@ public class GlobalExceptionHandler extends BasicErrorController {
 		}
 		if(throwable instanceof ApplicationException){
 			ApplicationException ex = (ApplicationException) throwable;
-			result.setStatus(ex.getCode());
+			result.setCode(ex.getCode());
 			result.setMessage(ex.getMessage());
 			logger.info("{} at {}", ex.getMessage(), ex.getCause().getStackTrace()[0].toString());
 		}else {

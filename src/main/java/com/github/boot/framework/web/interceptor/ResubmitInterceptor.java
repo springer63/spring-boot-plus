@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 /**
  * 防止请求重复提交拦截器
  * @author ChenJianhui
+ * @date 2017/6/19
  */
 public class ResubmitInterceptor extends HandlerInterceptorAdapter{
 	

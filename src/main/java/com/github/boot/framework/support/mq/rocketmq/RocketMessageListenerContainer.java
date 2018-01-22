@@ -25,7 +25,9 @@ import java.util.List;
 
 /**
  * Rocket MQ Listener Container
- * Created by cjh on 2017/3/15.
+ *
+ * @author cjh
+ * @date 2017/3/15
  */
 public class RocketMessageListenerContainer extends AbstractMessageListenerContainer implements InitializingBean, DisposableBean {
 

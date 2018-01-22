@@ -7,7 +7,9 @@ import java.lang.reflect.Method;
 
 /**
  * 自定义缓存KEY生成器
- * Created by cjh on 2017/3/16.
+ *
+ * @author cjh
+ * @date 2017/3/16
  */
 public class CacheKeyGenerator implements KeyGenerator {
 

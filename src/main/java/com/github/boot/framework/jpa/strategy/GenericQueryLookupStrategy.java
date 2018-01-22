@@ -16,7 +16,9 @@ import java.lang.reflect.Method;
 
 /**
  * 方法查询策略
- * Created by cjh on 2017/7/15.
+ *
+ * @author cjh
+ * @date 2017/7/15
  */
 public class GenericQueryLookupStrategy implements QueryLookupStrategy {
 

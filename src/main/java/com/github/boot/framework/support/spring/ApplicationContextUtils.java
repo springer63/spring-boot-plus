@@ -3,7 +3,9 @@ package com.github.boot.framework.support.spring;
 import org.springframework.context.ApplicationContext;
 
 /**
- * Created by cjh on 2017/4/18.
+ * Spring ApplicationContext Utils
+ * @author cjh
+ * @date 2017/4/18
  */
 public class ApplicationContextUtils {
 

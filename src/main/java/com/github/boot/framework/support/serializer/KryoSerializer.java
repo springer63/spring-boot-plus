@@ -10,7 +10,9 @@ import com.esotericsoftware.kryo.io.Output;
 
 /**
  * Kryo Serializer
- * Created by cjh on 2017/3/13.
+ *
+ * @author cjh
+ * @date 2017/3/13
  */
 public class KryoSerializer<T> implements Serializer<T> {
 	

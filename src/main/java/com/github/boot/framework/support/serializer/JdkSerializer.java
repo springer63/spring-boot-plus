@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
+ * JDK原生序列化工具
  * @author cjh
  * @version 1.0
  * @param <T> 类型

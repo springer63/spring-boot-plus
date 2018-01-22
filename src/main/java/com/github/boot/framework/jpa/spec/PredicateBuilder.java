@@ -20,6 +20,10 @@ import java.util.List;
 
 import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
 
+/**
+ * @author chenjianhui
+ * @date 2017/05/24
+ */
 public class PredicateBuilder<T> {
 
     private final Predicate.BooleanOperator operator;

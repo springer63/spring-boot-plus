@@ -9,6 +9,11 @@ import java.util.List;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
+
+/**
+ * @author chenjianhui
+ * @date 2017/05/24
+ */
 public class Sorts {
 
     public static Builder builder() {

@@ -6,7 +6,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by cjh on 2017/6/19.
+ * Spring Application Loaded Listener
+ * @author cjh
+ * @date 2017/6/19
  */
 @Component
 public class ContextLoadedListener implements ApplicationListener<ContextRefreshedEvent> {

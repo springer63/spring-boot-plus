@@ -2,7 +2,9 @@ package com.github.boot.framework.jpa;
 
 /**
  * 操作符
- * Created by cjh on 2017/3/15.
+ *
+ * @author cjh
+ * @date 2017/3/15
  */
 public enum Operator {
 

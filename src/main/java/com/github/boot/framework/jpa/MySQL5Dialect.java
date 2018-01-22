@@ -10,7 +10,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 /**
- * Created by cjh on 2017/6/22.
+ * MySQL方言
+ * @author cjh
+ * @date 2017/6/22
  */
 public class MySQL5Dialect extends MySQLDialect {
 

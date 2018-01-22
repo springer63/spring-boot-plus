@@ -4,7 +4,9 @@ import com.github.boot.framework.support.mq.AbstractMessage;
 
 /**
  * 定时消息
- * Created by cjh on 2017/3/29.
+ *
+ * @author cjh
+ * @date 2017/3/29
  */
 public abstract class AbstractScheduledMessage extends AbstractMessage {
 

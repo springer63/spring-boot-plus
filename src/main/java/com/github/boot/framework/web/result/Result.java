@@ -1,6 +1,8 @@
 package com.github.boot.framework.web.result;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.github.boot.framework.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -10,10 +12,11 @@ import java.io.Serializable;
  * @version 1.0
  * @date：2017年3月14日 下午7:32:05
  */
-@JsonPropertyOrder({"code", "message", "userId", "timestamp", "data"})
-public class Result implements Serializable{
+public final class Result<T> implements Serializable{
 
 	private static final long serialVersionUID = -5759964467525426508L;
+
+	private static final Logger logger = LoggerFactory.getLogger(Result.class);
 
 	//**********************系统全局错误码**************************
 
@@ -43,6 +46,11 @@ public class Result implements Serializable{
 	public static final int INVALID_PARAM = 40003;
 
 	/**
+	 * 无效的签名
+	 */
+	private static final int INVALID_SIGN = 40005;
+
+	/**
 	 * 请求接口不存在
 	 */
 	public static final int API_NOT_EXIST = 40004;
@@ -53,14 +61,9 @@ public class Result implements Serializable{
 	public static final int INVALID_REQUEST_METHOD = 40005;
 
 	/**
-	 * 用户账号被锁定
+	 * 用户被锁定
 	 */
 	public static final int ACCOUNT_LOCKED = 40006;
-
-	/**
-	 * 无效的签名
-	 */
-	public static final int INVALID_SIGN = 40007;
 
 	/**
 	 * 系统异常
@@ -75,39 +78,39 @@ public class Result implements Serializable{
 	//**************************************************************
 
 	/**
-	 * 响应结果状态
+	 * 错误码
 	 */
-	private int status;
+	private int code;
 
 	/**
-	 * 响应结果信息
+	 * 错误信息
 	 */
 	private String message;
 
 	/**
 	 * 用户ID
 	 */
-	private Object userId;
+	private Long userId;
 
 	/**
-	 * 响应时间戳
+	 * 时间戳
 	 */
 	private Long timestamp;
 
 	/**
-	 * 响应结果数据
+	 * 返回数据
 	 */
-	private Object data;
+	private T data;
 
 	public Result(){}
 
-	public Result(int status, String message){
-		this.status = status;
-		this.message = message;
+	public Result(int code, String msg){
+		this.code = code;
+		this.message = msg;
 	}
 
 	public static Result success(){
-		return new Result(SUCCESS, "请求成功");
+		return new Result(SUCCESS, "request success");
 	}
 
 	public static Result locked(){
@@ -115,7 +118,7 @@ public class Result implements Serializable{
 	}
 
 	public static Result unauthorized(){
-		return new Result(NOT_OAUTH, "用户未登录");
+		return new Result(NOT_OAUTH, "请先登录！");
 	}
 
 	public static Result permissionDenied(){
@@ -146,28 +149,30 @@ public class Result implements Serializable{
 		return new Result(SYSTEM_BUSY, "操作过于频繁，请稍后重试");
 	}
 
-	public int getStatus() {
-		return status;
+	public T getData() {
+		return data;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
+	public void setData(T data) {
+		this.data = data;
 	}
 
 	public Object getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Object userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	@Override
+	public String toString() {
+		try {
+			return JsonUtils.toJson(this);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "request error";
+		}
 	}
 
 	public Long getTimestamp() {
@@ -178,11 +183,19 @@ public class Result implements Serializable{
 		this.timestamp = timestamp;
 	}
 
-	public Object getData() {
-		return data;
+	public int getCode() {
+		return code;
 	}
 
-	public void setData(Object data) {
-		this.data = data;
+	public void setCode(int code) {
+		this.code = code;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

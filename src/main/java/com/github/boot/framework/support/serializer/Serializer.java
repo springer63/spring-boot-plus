@@ -5,7 +5,9 @@ package com.github.boot.framework.support.serializer;
 
 /**
  * 对象序列化接口
- * Created by cjh on 2017/3/28.
+ *
+ * @author cjh
+ * @date 2017/3/28
  */
 public interface Serializer<T> {
 

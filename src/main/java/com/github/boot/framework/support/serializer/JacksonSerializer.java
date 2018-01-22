@@ -9,7 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 /**
- * Created by cjh on 2017/3/29.
+ * 基于Jackson序列化工具
+ * @author cjh
+ * @date 2017/3/29
  */
 public class JacksonSerializer<T> implements Serializer<T> {
 

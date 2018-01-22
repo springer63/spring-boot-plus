@@ -17,7 +17,9 @@ import org.springframework.beans.factory.InitializingBean;
 
 /**
  * Rocket MQ Producer
- * Created by cjh on 2017/3/15.
+ *
+ * @author cjh
+ * @date 2017/3/15
  */
 public class RocketMessageProducer implements InitializingBean, DisposableBean, MessageProducer {
 
