@@ -790,7 +790,8 @@ public class HttpUtils {
 
     static {
         objMapper = new ObjectMapper();
-        objMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);//设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
+        //设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
+        objMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         objMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         objMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
         objMapper.enable(Feature.ALLOW_COMMENTS);
@@ -799,7 +800,8 @@ public class HttpUtils {
         JacksonXmlModule module = new JacksonXmlModule();
         module.setDefaultUseWrapper(false);
         xmlMapper = new XmlMapper(module);
-        xmlMapper.setSerializationInclusion(Include.NON_DEFAULT);//设置序列化不包含Java对象中为空的属性
+        //设置序列化不包含Java对象中为空的属性
+        xmlMapper.setSerializationInclusion(Include.NON_DEFAULT);
         xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
