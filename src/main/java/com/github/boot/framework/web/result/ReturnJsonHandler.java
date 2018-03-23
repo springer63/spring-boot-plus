@@ -40,12 +40,17 @@ public class ReturnJsonHandler implements HandlerMethodReturnValueHandler, Order
         mavContainer.setRequestHandled(true);
         HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
         Result result = (Result) returnValue;
-        if(result.getData() == null){
+        if(result.getData() == null && Result.SUCCESS == result.getCode()){
             Type genericParameterType = returnType.getGenericParameterType();
             if(genericParameterType instanceof ParameterizedType){
                 ParameterizedType type = (ParameterizedType) genericParameterType;
-                ParameterizedType actualType = (ParameterizedType) type.getActualTypeArguments()[0];
-                Class<?> rawType = (Class<?>) actualType.getRawType();
+                Type actualType = type.getActualTypeArguments()[0];
+                Class<?> rawType;
+                if(actualType instanceof ParameterizedType){
+                    rawType = (Class<?>) ((ParameterizedType) actualType).getRawType();
+                }else{
+                    rawType = (Class<?>) actualType;
+                }
                 if(Collection.class.isAssignableFrom(rawType)){
                     result.setData(Collections.EMPTY_LIST);
                 }
