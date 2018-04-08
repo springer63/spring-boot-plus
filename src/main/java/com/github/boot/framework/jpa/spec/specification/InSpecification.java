@@ -6,6 +6,12 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+/**
+ * InSpecification
+ *
+ * @author cjh
+ * @date 2017/3/12
+ */
 public class InSpecification<T> extends AbstractSpecification<T> {
     private String property;
     private Object[] values;

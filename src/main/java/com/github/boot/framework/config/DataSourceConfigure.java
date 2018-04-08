@@ -84,7 +84,6 @@ public class DataSourceConfigure {
 		dataSource.setTestWhileIdle(true);
 		dataSource.setPoolPreparedStatements(true);
 		dataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
-		//dataSource.setFilters("wall,stat");
 		return dataSource;
 	}
 

@@ -9,9 +9,11 @@ import static javax.persistence.criteria.Predicate.BooleanOperator.OR;
  * @date 2017/05/24
  */
 public class Specifications {
+
     public static <T> PredicateBuilder<T> and() {
         return new PredicateBuilder<>(AND);
     }
+
     public static <T> PredicateBuilder<T> or() {
         return new PredicateBuilder<>(OR);
     }

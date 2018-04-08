@@ -14,7 +14,9 @@ import org.springframework.util.StringUtils;
 
 /**
  * Session 共享配置
- * Created by cjh on 2017/3/12.
+ *
+ * @author cjh
+ * @date 2017/3/12
  */
 @Configurable
 @EnableSpringHttpSession

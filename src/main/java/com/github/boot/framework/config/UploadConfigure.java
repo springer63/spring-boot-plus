@@ -12,11 +12,12 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import javax.servlet.MultipartConfigElement;
 
 /**
- * Created by cjh on 2017/3/24.
+ * 文件上传位置
+ * @author cjh
+ * @date 2017/3/24
  */
 @Configuration
 public class UploadConfigure {
-
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {

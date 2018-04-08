@@ -21,6 +21,7 @@ import java.util.*;
 
 /**
  * 复杂对象转换器
+ * @author cjh
  * @param <T>
  */
 public class BeanTransformerAdapter<T> implements ResultTransformer {
@@ -120,8 +121,8 @@ public class BeanTransformerAdapter<T> implements ResultTransformer {
 	 */
 	protected void initialize(Class<T> mappedClass) {
 		this.mappedClass = mappedClass;
-		this.mappedFields = new HashMap<String, PropertyDescriptor>();
-		this.mappedProperties = new HashSet<String>();
+		this.mappedFields = new HashMap<>(10);
+		this.mappedProperties = new HashSet<>();
 		PropertyDescriptor[] pds = BeanUtils.getPropertyDescriptors(mappedClass);
 		for (PropertyDescriptor pd : pds) {
 			if (pd.getWriteMethod() != null) {

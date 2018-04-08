@@ -6,6 +6,13 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+
+/**
+ * GeSpecification
+ *
+ * @author cjh
+ * @date 2017/3/12
+ */
 public class GeSpecification<T> extends AbstractSpecification<T> {
     private final String property;
     private final Comparable<Object> compare;

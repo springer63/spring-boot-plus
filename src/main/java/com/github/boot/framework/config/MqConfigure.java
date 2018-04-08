@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * 队列消息配置
- * Created by cjh on 2017/3/12.
+ *
+ * @author cjh
+ * @date 2017/3/12
  */
 @Configurable
 public class MqConfigure {

@@ -20,14 +20,16 @@ import java.util.Set;
 
 /**
  * 缓存配置
- * Created by cjh on 2017/3/12.
+ *
+ * @author cjh
+ * @date 2017/3/12
  */
 @Configurable
 @EnableCaching
 public class CacheConfigure extends CachingConfigurerSupport {
 
     @Value("${spring.cache.packages}")
-    private String cachePackges;
+    private String cachePackages;
 
     @Override
     public KeyGenerator keyGenerator() {
@@ -36,8 +38,8 @@ public class CacheConfigure extends CachingConfigurerSupport {
 
     @Bean
     public CacheManager cacheManager(RedissonClient redissonClient) throws Exception{
-        Set<Class<?>> classes = new PackageUtils(cachePackges.split(","), org.springframework.cache.annotation.CacheConfig.class).scan();
-        Map<String, CacheConfig> configMap = new HashMap<String, CacheConfig>(classes.size());
+        Set<Class<?>> classes = new PackageUtils(cachePackages.split(","), org.springframework.cache.annotation.CacheConfig.class).scan();
+        Map<String, CacheConfig> configMap = new HashMap<>(classes.size());
         CacheConfig baseConfig = new CacheConfig(24 * 60 * 1000, 12 * 60 * 1000);
         for (Class<?> clazz: classes){
             CacheConfig cacheConfig = baseConfig;

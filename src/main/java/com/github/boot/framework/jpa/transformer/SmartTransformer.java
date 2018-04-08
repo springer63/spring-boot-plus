@@ -7,7 +7,9 @@ import java.util.List;
 
 /**
  * 基本类型转换器
- * Created by cjh on 2017/7/15.
+ *
+ * @author cjh
+ * @date 2017/7/15
  */
 public class SmartTransformer extends BasicTransformerAdapter {
 

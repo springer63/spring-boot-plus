@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("rawtypes")
 public class QueryBuilder {
 
-    private static final Pattern ORDERBY_PATTERN_1 = Pattern.compile("order\\s+by.+?$", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+    private static final Pattern ORDER_BY_PATTERN_1 = Pattern.compile("order\\s+by.+?$", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     public static <C> Query transform(Query query, Class<C> clazz) {
         if (Map.class.isAssignableFrom(clazz)) {
@@ -45,7 +45,7 @@ public class QueryBuilder {
     }
 
     private static String cleanOrderBy(String query) {
-        Matcher matcher = ORDERBY_PATTERN_1.matcher(query);
+        Matcher matcher = ORDER_BY_PATTERN_1.matcher(query);
         StringBuffer sb = new StringBuffer();
         int i = 0;
         while (matcher.find()) {

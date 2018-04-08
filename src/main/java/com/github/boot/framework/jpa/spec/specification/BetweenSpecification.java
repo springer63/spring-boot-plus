@@ -9,6 +9,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 
+/**
+ * BetweenSpecification
+ *
+ * @author cjh
+ * @date 2017/3/12
+ */
 public class BetweenSpecification<T> extends AbstractSpecification<T> {
     private final String property;
     private final Range range;
