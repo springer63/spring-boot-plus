@@ -10,7 +10,6 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import java.io.*;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
- 
+
 /**
  * ResponseWrap类，用来对响应结果的处理
  * @author ChenJianhui
@@ -34,7 +33,7 @@ public class ResponseWrap {
     private ObjectMapper objMapper;
     private XmlMapper xmlMapper;
 
-    public ResponseWrap(CloseableHttpClient httpClient, HttpRequestBase request, HttpResponse response, HttpClientContext context, ObjectMapper mapper, XmlMapper xmlMapper){
+    public ResponseWrap(HttpRequestBase request, HttpResponse response, HttpClientContext context, ObjectMapper mapper, XmlMapper xmlMapper){
         this.response = response;
         this.request = request;
         this.context = context;
@@ -109,7 +108,7 @@ public class ResponseWrap {
      */
     public Charset getCharset() {
          ContentType contentType = ContentType.get(entity);
-         if(contentType == null){
+         if(contentType == null) {
              return null;
          }
          return contentType.getCharset();
