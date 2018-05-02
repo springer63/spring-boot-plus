@@ -321,8 +321,8 @@ Spring DataJPA 一个最大特点, 就是直接在接口中定义查询方法，
 
 ```java
 @Entity
-@Table(name = "a_activity")
-public class AActivity extends BaseEntity<AActivity> {
+@Table(name = "activity")
+public class Activity extends BaseEntity<Activity> {
 
 	private static final long serialVersionUID = -3216080915989774115L;
 
