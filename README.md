@@ -313,7 +313,7 @@ Spring DataJPA 一个最大特点, 就是直接在接口中定义查询方法，
 
 ### 自定义SQL查询
 
-```
+```java
 public interface ActivityDao extends BaseDao<Long, Activity>{
     
     /**
