@@ -7,11 +7,11 @@ Spring Cache, Spring WebSocket，Spring Mockito, Spring validation, Redssion，M
 新的项目架构以Spring Boot为核心技术框架, 主要集成了以下框架
 - Spring Data JPA
 - Spring Session
+- Spring MVC
 - Spring Cache
 - Spring WebSocket
 - Spring Validation
 - Spring Mockito
-- Mybatis
 - Redisson
 
 ------------
