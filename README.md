@@ -308,10 +308,28 @@ Spring DataJPA 一个最大特点, 就是直接在接口中定义查询方法，
 |Not|findByLastnameNot|… where x.lastname <> ?1|
 |In|findByAgeIn(Collection<Age> ages)|… where x.age in ?1|
 |NotIn|findByAgeNotIn(Collection<Age> age)|… where x.age not in ?1|
-
-
-
+	
 ------------
+
+### 自定义SQL查询
+
+```
+public interface ActivityDao extends BaseDao<Long, Activity>{
+    
+    /**
+     * 查询整个实体
+     */
+    @Query(value = "select * from activity where title = :title", nativeQuery = true)
+    Activity findByTitle(@Param("title) String title);
+    
+    /**
+     * 查询实体部分字段或者进行复杂的链接查询， 子查询等， 可以用DTO接口返回结果
+     */
+    @NativeQuery("select a.id, a.title, a.username from ativity a join user u on a.user_id = u.id where a.title = :title")
+    ActivityDTO findByTitle(@Param("title") String title)
+
+}
+```
 
 
 ##项目model层设计
