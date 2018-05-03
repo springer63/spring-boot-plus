@@ -9,4 +9,5 @@ package com.github.boot.framework.jpa;
  * @date 2017/6/21
  */
 public interface Criterion<T> {
+
 }

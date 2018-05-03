@@ -35,13 +35,12 @@ public class MySQL5Dialect extends MySQLDialect {
     }
 
     private static final ViolatedConstraintNameExtracter EXTRACTER = new TemplatedViolatedConstraintNameExtracter() {
-
         @Override
-        protected String doExtractConstraintName(SQLException sqle) throws NumberFormatException {
-            final int sqlState = Integer.valueOf( JdbcExceptionHelper.extractSqlState( sqle ) ).intValue();
+        protected String doExtractConstraintName(SQLException e) throws NumberFormatException {
+            final int sqlState = Integer.valueOf( JdbcExceptionHelper.extractSqlState( e ) ).intValue();
             switch ( sqlState ) {
                 case 23000:
-                    return extractUsingTemplate( " for key '", "'", sqle.getMessage() );
+                    return extractUsingTemplate( " for key '", "'", e.getMessage() );
                 default:
                     return null;
             }
