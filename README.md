@@ -7,11 +7,11 @@ Spring Cache, Spring WebSocket，Spring Mockito, Spring validation, Redssion，M
 新的项目架构以Spring Boot为核心技术框架, 主要集成了以下框架
 - Spring Data JPA
 - Spring Session
+- Spring MVC
 - Spring Cache
 - Spring WebSocket
 - Spring Validation
 - Spring Mockito
-- Mybatis
 - Redisson
 
 ------------
@@ -45,7 +45,8 @@ Controller类中方法, 全部采用如下结构:
 ### 动态JSON视图
 Json动态视图直接采用注解@Json
 在控制器方法上采用@Json注解, Json注解中include 指定包含哪些字段, exclude指定排除哪些字段 如下
-   
+ ```java
+ 
     @Cacheable
     @RequestMapping(value = "/list", name = "分页查询活动列表")
     @Json(type = AActivity.class, exclude = "createdTime,updatedTime", include="title")
@@ -55,6 +56,7 @@ Json动态视图直接采用注解@Json
         result.putData("page", page);
         return result;
     }
+```
 
 ### 采用JSR 303标准进行参数校验 
 JSR 303 – Bean Validation 是一个数据验证的规范，2009 年 11 月确定最终方案。2009 年 12 月 Java EE 6 发布，Bean Validation 作为一个重要特性被包含其中。本文将对 Bean Validation 的主要功能进行介绍，并通过一些示例来演示如何在 Java 开发过程正确的使用 Bean Validation。
@@ -79,7 +81,7 @@ JSR 303 – Bean Validation 是一个数据验证的规范，2009 年 11 月确�
 
 代码示例
 
-   
+   ```java
    
 	public class AddOrderForm implement Form {
 		// 必须不为 null, 大小是 10
@@ -108,7 +110,7 @@ JSR 303 – Bean Validation 是一个数据验证的规范，2009 年 11 月确�
 
 	}
    
-
+```
 ### RequestMapping注解
 请大家最好在@RequestMapping注解的name属性赋值, 方便后面自动生成接口文档, 自动抓取API接口信息写入数据库Resource表中
 后期手动添加相当麻烦, 也容易出错,或者漏掉.
@@ -117,6 +119,7 @@ JSR 303 – Bean Validation 是一个数据验证的规范，2009 年 11 月确�
 Spring 3.1 引入了激动人心的基于注释（annotation）的缓存（cache）技术，它本质上不是一个具体的缓存实现方案（例如 EHCache 或者 OSCache），而是一个对缓存使用的抽象，通过在既有代码中添加少量它定义的各种 annotation，即能够达到缓存方法的返回对象的效果。
 
 例如如下对活动的分页结果进行缓存,只需要在方法上加@Cacheable注解
+   ```java
    
     @Cacheable
     @RequestMapping(value = "/list", name = "分页查询活动列表")
@@ -128,7 +131,7 @@ Spring 3.1 引入了激动人心的基于注释（annotation）的缓存（cache
         return result;
     }
 	
-	
+```	
 
 ------------
 
@@ -136,6 +139,8 @@ Spring 3.1 引入了激动人心的基于注释（annotation）的缓存（cache
 ## 项目Service 层设计
 所有的Service接口都要继承BaseService接口, BaseService定义基本的增删改查, 还有按不同的条件, 排序, 分页查询接口, 在BaseServiceImpl已经全部实现
 所有其他的具体的Service都不需要写了, 
+```java
+
 public interface BaseService<T, ID extends Serializable> {
 	
 	/**
@@ -280,6 +285,8 @@ public interface BaseService<T, ID extends Serializable> {
 	public <S extends T> List<S> save(Iterable<S> entities);
 }
 
+```
+
 ## 项目DAO层设计
 
 ### Dao设计采用JPA2.0规范
@@ -308,10 +315,28 @@ Spring DataJPA 一个最大特点, 就是直接在接口中定义查询方法，
 |Not|findByLastnameNot|… where x.lastname <> ?1|
 |In|findByAgeIn(Collection<Age> ages)|… where x.age in ?1|
 |NotIn|findByAgeNotIn(Collection<Age> age)|… where x.age not in ?1|
-
-
-
+	
 ------------
+
+### 自定义SQL查询
+
+```java
+public interface ActivityDao extends BaseDao<Long, Activity>{
+    
+    /**
+     * 查询整个实体
+     */
+    @Query(value = "select * from activity where title = :title", nativeQuery = true)
+    Activity findByTitle(@Param("title) String title);
+    
+    /**
+     * 查询实体部分字段或者进行复杂的链接查询， 子查询等， 可以用DTO接口返回结果
+     */
+    @NativeQuery("select a.id, a.title, a.username from ativity a join user u on a.user_id = u.id where a.title = :title")
+    ActivityDTO findByTitle(@Param("title") String title)
+
+}
+```
 
 
 ##项目model层设计
@@ -321,8 +346,8 @@ Spring DataJPA 一个最大特点, 就是直接在接口中定义查询方法，
 
 ```java
 @Entity
-@Table(name = "a_activity")
-public class AActivity extends BaseEntity<AActivity> {
+@Table(name = "activity")
+public class Activity extends BaseEntity<Activity> {
 
 	private static final long serialVersionUID = -3216080915989774115L;
 
