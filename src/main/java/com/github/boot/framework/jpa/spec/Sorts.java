@@ -11,6 +11,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 
 /**
+ * 排序构建工具
  * @author chenjianhui
  * @date 2017/05/24
  */

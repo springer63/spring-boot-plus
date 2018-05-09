@@ -1,12 +1,13 @@
-package com.github.boot.framework.util;
+package com.github.boot.framework.jpa.spec;
 
 import com.github.boot.framework.jpa.Condition;
 import com.github.boot.framework.jpa.Criterion;
-import com.github.boot.framework.jpa.Order;
-import com.github.boot.framework.jpa.Orders;
-import com.github.boot.framework.jpa.spec.PredicateBuilder;
-import com.github.boot.framework.web.form.AbstractPageForm;
-import com.github.boot.framework.jpa.spec.Specifications;
+import com.github.boot.framework.jpa.SortDirection;
+import com.github.boot.framework.jpa.SortProperty;
+import com.github.boot.framework.util.DateUtils;
+import com.github.boot.framework.util.ReflectionUtils;
+import com.github.boot.framework.util.StringUtils;
+import com.github.boot.framework.util.ValidUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Range;
@@ -18,51 +19,48 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 /**
- * Created by cjh on 2017/6/21.
- */
-public class SpecUtils {
+ * Specification 查询解析工具
+ *
+ * @author chenjianhui
+ * @create 2018/05/09
+ **/
+public class SpecificationParser {
 
+    /**
+     * SPEL表达式解析器
+     */
     private static ExpressionParser parser = new SpelExpressionParser();
 
     /**
      * 构建分页查询条件
-     * @param form
+     * @param criterion
      * @param <T>
      * @return
      */
-    public static <T> Pageable pageable(AbstractPageForm<T> form){
-        Sort sort = null;
-        Order order = form.getClass().getAnnotation(Order.class);
-        if(order != null){
-            sort = new Sort(order.direction(), order.orderBy().split(","));
-        }
-        Orders orders = form.getClass().getAnnotation(Orders.class);
-        if(orders != null){
-            List<Sort.Order> orderList = new ArrayList<>(orders.value().length);
-            for(Order o : orders.value()){
-                orderList.add(new Sort.Order(o.direction(), o.orderBy()));
+    public static <T> Pageable pageable(Criterion<T> criterion){
+        Field[] fields = criterion.getClass().getFields();
+        String sortProperty = null;
+        String sortDirection = null;
+        for (Field f : fields){
+            SortProperty sp = f.getAnnotation(SortProperty.class);
+            if(sp != null){
+                sortProperty = (String) ReflectionUtils.getFieldValue(criterion, f.getName());
+                continue;
             }
-            sort = new Sort(orderList);
-        }
-        if(ValidUtils.isValid(form.getOrderBy())){
-            String[] orderStrs = form.getOrderBy().split(",");
-            List<Sort.Order> orderList = new ArrayList<>(orderStrs.length);
-            for (String or : orderStrs){
-                String[] array = or.split(" ");
-                orderList.add(new Sort.Order(Sort.Direction.fromString(array[1].trim()), array[0].trim()));
+            SortDirection sd = f.getAnnotation(SortDirection.class);
+            if(sd != null){
+                sortDirection = (String) ReflectionUtils.getFieldValue(criterion, f.getName());
             }
-            sort = new Sort(orderList);
         }
-        if(sort == null){
-            return new PageRequest(form.getPage(), form.getSize());
+        if(sortProperty != null && sortDirection != null){
+            Sort sort = new Sort(Sort.Direction.fromString(sortDirection), sortProperty);
+            return new PageRequest(criterion.getPage(), criterion.getSize(), sort);
         }
-        return new PageRequest(form.getPage(), form.getSize(), sort);
+        return new PageRequest(criterion.getPage(), criterion.getSize());
     }
 
     /**
@@ -72,7 +70,7 @@ public class SpecUtils {
      * @return
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> Specification<T> condition(Criterion<T> criterion){
+    public static <T> Specification<T> condition(Criterion<T> criterion){
         Field[] fields = criterion.getClass().getDeclaredFields();
         PredicateBuilder<T> builder = Specifications.<T>and();
         String property;
@@ -205,6 +203,5 @@ public class SpecUtils {
     public <T> Specification<T> and(Specification<T> thisSpec, Specification<T> otherSpec){
         return org.springframework.data.jpa.domain.Specifications.where(thisSpec).and(otherSpec);
     }
-
 
 }

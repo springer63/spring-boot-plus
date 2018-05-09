@@ -2,7 +2,7 @@ package com.github.boot.test.form;
 
 import com.github.boot.framework.jpa.Condition;
 import com.github.boot.framework.jpa.Operator;
-import com.github.boot.framework.web.form.AbstractPageForm;
+import com.github.boot.framework.web.form.PageForm;
 import com.github.boot.test.entity.User;
 
 
@@ -12,7 +12,7 @@ import com.github.boot.test.entity.User;
  * @author chenjianhui
  * @create 2018/04/08
  **/
-public class UserPageForm extends AbstractPageForm<User>{
+public class UserPageForm extends PageForm<User> {
 
     @Condition
     private Long id;

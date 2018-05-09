@@ -1,6 +1,8 @@
 package com.github.boot.framework.service;
 
-import com.github.boot.framework.web.form.AbstractPageForm;
+import com.github.boot.framework.jpa.Criterion;
+import com.github.boot.framework.jpa.spec.SpecificationParser;
+import com.github.boot.framework.web.form.PageForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,8 +41,15 @@ public interface BaseService<T, ID extends Serializable> {
 	 * @param form
 	 * @return
 	 */
-	Page<T> page(AbstractPageForm<T> form);
-	
+	Page<T> page(Criterion<T> form);
+
+	/**
+	 * 根据动态条件查询实体
+	 * @param criterion
+	 * @return
+	 */
+	List<T> findAll(Criterion<T> criterion);
+
 	/**
 	 * 根据ID查询一个实体
 	 * @param id

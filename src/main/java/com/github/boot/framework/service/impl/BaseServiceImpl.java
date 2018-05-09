@@ -1,9 +1,9 @@
 package com.github.boot.framework.service.impl;
 
+import com.github.boot.framework.jpa.Criterion;
 import com.github.boot.framework.jpa.dao.BaseDao;
+import com.github.boot.framework.jpa.spec.SpecificationParser;
 import com.github.boot.framework.service.BaseService;
-import com.github.boot.framework.util.SpecUtils;
-import com.github.boot.framework.web.form.AbstractPageForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,13 +64,18 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
 	}
 
 	@Override
-	public Page<T> page(AbstractPageForm<T> form){
-		return this.findAll(SpecUtils.condition(form), SpecUtils.pageable(form));
+	public Page<T> page(Criterion<T> criterion){
+		return this.findAll(SpecificationParser.condition(criterion), SpecificationParser.pageable(criterion));
 	}
 
 	@Override
 	public List<T> findAll() {
 		return dao.findAll();
+	}
+
+	@Override
+	public List<T> findAll(Criterion<T> criterion) {
+		return dao.findAll(SpecificationParser.condition(criterion));
 	}
 
 	@Override
