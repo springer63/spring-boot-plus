@@ -28,52 +28,52 @@ public final class Result<T> implements Serializable{
 	/**
 	 *  未授权（未登录）
 	 */
-	public static final int NOT_OAUTH = 40000;
+	public static final int NOT_OAUTH = 50000;
 
 	/**
 	 * 无权限访问
 	 */
-	public static final int PERMISSION_DENIED = 40001;
+	public static final int PERMISSION_DENIED = 50001;
 
 	/**
 	 * 非法请求
 	 */
-	public static final int ILLEGAL_REQUEST = 40002;
+	public static final int ILLEGAL_REQUEST = 50002;
 
 	/**
 	 * 无效的请求参数
 	 */
-	public static final int INVALID_PARAM = 40003;
+	public static final int INVALID_PARAM = 50003;
 
 	/**
 	 * 无效的签名
 	 */
-	private static final int INVALID_SIGN = 40005;
+	private static final int INVALID_SIGN = 50005;
 
 	/**
 	 * 请求接口不存在
 	 */
-	public static final int API_NOT_EXIST = 40004;
+	public static final int API_NOT_EXIST = 50004;
 
 	/**
 	 * 无效请求方法
 	 */
-	public static final int INVALID_REQUEST_METHOD = 40005;
+	public static final int INVALID_REQUEST_METHOD = 50005;
 
 	/**
 	 * 用户被锁定
 	 */
-	public static final int ACCOUNT_LOCKED = 40006;
+	public static final int ACCOUNT_LOCKED = 50006;
 
 	/**
 	 * 系统异常
 	 */
-	public static final int SYSTEM_ERROR = 50000;
+	public static final int SYSTEM_ERROR = 50007;
 
 	/**
 	 * 系统繁忙
 	 */
-	public static final int SYSTEM_BUSY = 50001;
+	public static final int SYSTEM_BUSY = 50007;
 
 	//**************************************************************
 
@@ -90,7 +90,7 @@ public final class Result<T> implements Serializable{
 	/**
 	 * 用户ID
 	 */
-	private Long userId;
+	private Object userId;
 
 	/**
 	 * 时间戳
@@ -161,7 +161,7 @@ public final class Result<T> implements Serializable{
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(Object userId) {
 		this.userId = userId;
 	}
 

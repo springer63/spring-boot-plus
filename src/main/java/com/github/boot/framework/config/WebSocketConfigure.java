@@ -1,10 +1,12 @@
 package com.github.boot.framework.config;
 
+import com.github.boot.framework.support.mq.MessageProducer;
+import com.github.boot.framework.support.stomp.StompMessageSender;
 import com.github.boot.framework.util.ConstUtils;
 import com.github.boot.framework.util.ServletUtils;
-import com.github.boot.framework.support.stomp.StompMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -14,6 +16,8 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptorAdapter;
 import org.springframework.session.ExpiringSession;
 import org.springframework.session.web.socket.config.annotation.AbstractSessionWebSocketMessageBrokerConfigurer;
@@ -41,6 +45,7 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 	private static final Logger logger = LoggerFactory.getLogger(WebSocketConfigure.class);
 
 	@Bean
+	@ConditionalOnBean(MessageProducer.class)
 	public StompMessageSender stompMessageSender(){
 		return new StompMessageSender();
 	}
@@ -52,7 +57,14 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 				.setHandshakeHandler(new DefaultHandshakeHandler() {
 					@Override
 					protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-						return new MyPrincipal(attributes.get("user"));
+						ServletServerHttpRequest serverRequest = (ServletServerHttpRequest) request;
+						HttpSession session = serverRequest.getServletRequest().getSession(false);
+						if(session == null){
+							return request.getPrincipal();
+						}
+						Object userId = session.getAttribute(ConstUtils.SESSION_USER_ID);
+						String clientIp = ServletUtils.getClientIp(serverRequest.getServletRequest());
+						return new MyPrincipal(userId, clientIp);
 					}
 				})
 				.setAllowedOrigins("*");
@@ -67,85 +79,56 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 		//表示给指定用户发送（一对一）的主题前缀
 		registry.setUserDestinationPrefix("/user/");
 	}
-	
+
 	/**
 	 * 消息传输参数配置
 	 */
-    @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-		registry.setMessageSizeLimit(512 * 1024) // 设置消息字节数大小
-				.setSendBufferSizeLimit(512 * 1024)// 设置消息缓存大小
-				.setSendTimeLimit(20000); // 设置消息发送时间限制毫秒
+	@Override
+	public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+		registry.setMessageSizeLimit(512 * 1024).setSendBufferSizeLimit(512 * 1024).setSendTimeLimit(20000);
+	}
 
-    }
-    
-    /**
-     * 输入通道参数设置
-     */
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.taskExecutor().corePoolSize(4) //设置消息输入通道的线程池线程数
-        .maxPoolSize(10)//最大线程数
-        .keepAliveSeconds(60);//线程活动时间
+	/**
+	 * 输入通道参数设置
+	 */
+	@Override
+	public void configureClientInboundChannel(ChannelRegistration registration) {
+		//设置消息输入通道的线程池线程数
+		registration.taskExecutor().corePoolSize(10).maxPoolSize(200).keepAliveSeconds(60);
 		registration.setInterceptors(new ChannelInterceptorAdapter() {
 			@Override
 			public Message<?> preSend(Message<?> message, MessageChannel channel) {
-				/*MessageHeaders headers = message.getHeaders();
-				Object topic = headers.get(StompHeaderAccessor.DESTINATION_HEADER);
-				if(topic != null && !topic.toString().startsWith("/app")){
-					message = null;
-				}*/
+				StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
+				StompCommand command = sha.getCommand();
+				if(command == StompCommand.DISCONNECT){
+					Principal user = sha.getUser();
+					if(user != null){
+						logger.info("用户{}已和服务器断开连接", user.getName());
+					}
+				}
 				return super.preSend(message, channel);
 			}
 		});
-    }
-    
-    /**
-     * 输出通道参数设置
-     */
-    @Override
-    public void configureClientOutboundChannel(ChannelRegistration registration) {
-        registration.taskExecutor().corePoolSize(4).maxPoolSize(20);
-        registration.setInterceptors(new ChannelInterceptorAdapter() {
+	}
+
+	/**
+	 * 输出通道参数设置
+	 */
+	@Override
+	public void configureClientOutboundChannel(ChannelRegistration registration) {
+		registration.taskExecutor().corePoolSize(10).maxPoolSize(200);
+		registration.setInterceptors(new ChannelInterceptorAdapter() {
 			@Override
 			public Message<?> preSend(Message<?> message, MessageChannel channel) {
-				logger.info("preSend ....");
-				return super.preSend(message, channel);
-			}
-
-			@Override
-			public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
-				logger.info("postSend ....");
-				super.postSend(message, channel, sent);
-			}
-
-			@Override
-			public void afterSendCompletion(Message<?> message, MessageChannel channel, boolean sent, Exception ex) {
-				logger.info("afterSendCompletion ...");
-				super.afterSendCompletion(message, channel, sent, ex);
-			}
-
-			@Override
-			public boolean preReceive(MessageChannel channel) {
-				logger.info("preReceive ...");
-				return super.preReceive(channel);
-			}
-
-			@Override
-			public Message<?> postReceive(Message<?> message, MessageChannel channel) {
-				logger.error("postReceive ...");
-				return super.postReceive(message, channel);
-			}
-
-			@Override
-			public void afterReceiveCompletion(Message<?> message, MessageChannel channel, Exception ex) {
-				logger.error("afterReceiveCompletion ...");
-				super.afterReceiveCompletion(message, channel, ex);
+				StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
+				sha.setHeartbeat(1000, 1000);
+				sha.setHeader("ts", System.currentTimeMillis());
+				return message;
 			}
 		});
-    }
+	}
 
-	static class SessionAuthHandshakeInterceptor implements HandshakeInterceptor {
+	public static class SessionAuthHandshakeInterceptor implements HandshakeInterceptor {
 
 		@Override
 		public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
@@ -160,7 +143,7 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 			}
 			ServletServerHttpRequest serverRequest = (ServletServerHttpRequest) request;
 			HttpSession session = serverRequest.getServletRequest().getSession(false);
-			Object userId = 0;
+			Object userId = null;
 			if(session != null){
 				userId = session.getAttribute(ConstUtils.SESSION_USER_ID);
 			}
@@ -172,12 +155,15 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 	/**
 	 * 用户主要信息
 	 */
-	static class MyPrincipal implements Principal{
+	public static class MyPrincipal implements Principal{
 
-		private Object userId = 0;
+		private Object userId;
 
-		public MyPrincipal(Object userId) {
+		private String clientIp;
+
+		public MyPrincipal(Object userId, String clientIp) {
 			this.userId = userId;
+			this.clientIp = clientIp;
 		}
 
 		@Override
@@ -185,7 +171,10 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 			return String.valueOf(userId);
 		}
 
-	}
+		public String getClientIp() {
+			return clientIp;
+		}
 
+	}
 
 }
