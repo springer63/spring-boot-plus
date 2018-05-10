@@ -1,7 +1,7 @@
 package com.github.boot.framework.web.exception;
 
-import com.github.boot.framework.web.result.Result;
 import com.github.boot.framework.web.annotation.OAuth;
+import com.github.boot.framework.web.result.Result;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,7 +34,17 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/error")
 public class GlobalExceptionHandler extends BasicErrorController {
 
-	private final static Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+	/**
+	 * 错误处理地址
+	 */
+	public static final String ERROR_URI = "/error/500";
+
+	/**
+	 * 错误结果
+	 */
+	public static final String ERROR_RESULT = "$errorResult";
 
 	private ErrorAttributes errorAttributes;
 
@@ -43,30 +52,6 @@ public class GlobalExceptionHandler extends BasicErrorController {
 	public GlobalExceptionHandler(ErrorAttributes errorAttributes) {
 		super(errorAttributes, new ErrorProperties());
 		this.errorAttributes = errorAttributes;
-	}
-
-	@OAuth(required = false)
-	@RequestMapping("/" + Result.NOT_OAUTH)
-	public Result unauthorized(){
-		return Result.unauthorized();
-	}
-
-	@OAuth(required = false)
-	@RequestMapping("/" + Result.PERMISSION_DENIED)
-	public Result permissionDenied(){
-		return Result.permissionDenied();
-	}
-
-	@OAuth(required = false)
-	@RequestMapping("/" + Result.INVALID_PARAM)
-	public Result invalidParam(ModelMap modelMap){
-		return new Result(Result.INVALID_PARAM, modelMap.get("message").toString());
-	}
-
-	@OAuth(required = false)
-	@RequestMapping("/" + Result.SYSTEM_BUSY)
-	public Result systemBusy() {
-		return Result.systemBusy();
 	}
 
 	/**
@@ -79,11 +64,16 @@ public class GlobalExceptionHandler extends BasicErrorController {
 	@RequestMapping(value = {"/500", ""}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Result> err(HttpServletRequest request) {
 		HttpStatus status = getStatus(request);
-		Result result = Result.systemError();
+		Result result;
 		if(HttpStatus.NOT_FOUND.equals(status)) {
 			result = Result.notFound();
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		RequestAttributes requestAttributes = new ServletRequestAttributes(request);
+		result = (Result) request.getAttribute(ERROR_RESULT);
+		if(result != null){
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
 		Throwable throwable = this.errorAttributes.getError(requestAttributes);
 		if(throwable == null){
 			return new ResponseEntity<>(result, HttpStatus.OK);

@@ -2,6 +2,7 @@ package com.github.boot.framework.web.interceptor;
 
 import com.github.boot.framework.util.ConstUtils;
 import com.github.boot.framework.util.JsonUtils;
+import com.github.boot.framework.web.exception.GlobalExceptionHandler;
 import com.github.boot.framework.web.result.Result;
 import com.github.boot.framework.web.annotation.OAuth;
 import org.springframework.web.method.HandlerMethod;
@@ -30,7 +31,8 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
         if(request.getSession().getAttribute(ConstUtils.SESSION_USER) == null){
-            request.getRequestDispatcher("/error/" + Result.NOT_OAUTH).forward(request, response);
+            request.setAttribute(GlobalExceptionHandler.ERROR_RESULT, Result.permissionDenied());
+            request.getRequestDispatcher(GlobalExceptionHandler.ERROR_URI).forward(request, response);
             return false;
         }
         Set<String> allResources = (Set<String>) request.getSession().getServletContext().getAttribute(ConstUtils.APP_ALLOW_URLS);
@@ -40,7 +42,8 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         String jsonStr = (String) request.getSession().getAttribute(ConstUtils.SESSION_USER_ALLOW_RIGHT);
         Set<String> resources = JsonUtils.fromJson(jsonStr, Set.class);
         if(!resources.contains(request.getRequestURI())){
-            request.getRequestDispatcher("/error/" + Result.PERMISSION_DENIED).forward(request, response);
+            request.setAttribute(GlobalExceptionHandler.ERROR_RESULT, Result.permissionDenied());
+            request.getRequestDispatcher(GlobalExceptionHandler.ERROR_URI).forward(request, response);
             return false;
         }
         return true;

@@ -4,6 +4,7 @@ import com.github.boot.framework.util.ConstUtils;
 import com.github.boot.framework.util.ServletUtils;
 import com.github.boot.framework.web.annotation.ApiAccessLimit;
 import com.github.boot.framework.web.annotation.ApiAccessLimits;
+import com.github.boot.framework.web.exception.GlobalExceptionHandler;
 import com.github.boot.framework.web.result.Result;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RBucket;
@@ -65,14 +66,16 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter{
 			}
 			RBucket<Object> lockBucket = redisClient.getBucket(lockedKey);
 			if(lockBucket.isExists()){
-				request.getRequestDispatcher("/error/" + Result.SYSTEM_BUSY).forward(request, response);
+				request.setAttribute(GlobalExceptionHandler.ERROR_RESULT, Result.systemBusy());
+				request.getRequestDispatcher(GlobalExceptionHandler.ERROR_URI).forward(request, response);
 				return false;
 			}
 			RAtomicLong atomic = redisClient.getAtomicLong(accessKey);
 			long count = atomic.incrementAndGet();
 			if(count > l.frequency()){
 				lockBucket.setAsync(1, l.lockTime(), l.timeUnit());
-				request.getRequestDispatcher("/error/" + Result.SYSTEM_BUSY).forward(request, response);
+				request.setAttribute(GlobalExceptionHandler.ERROR_RESULT, Result.systemBusy());
+				request.getRequestDispatcher(GlobalExceptionHandler.ERROR_URI).forward(request, response);
 				return false;
 			}
 			if(count == 1){

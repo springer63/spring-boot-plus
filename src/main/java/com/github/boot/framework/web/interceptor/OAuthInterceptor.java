@@ -1,6 +1,7 @@
 package com.github.boot.framework.web.interceptor;
 
 import com.github.boot.framework.util.ConstUtils;
+import com.github.boot.framework.web.exception.GlobalExceptionHandler;
 import com.github.boot.framework.web.result.Result;
 import com.github.boot.framework.web.annotation.OAuth;
 import org.springframework.web.method.HandlerMethod;
@@ -30,7 +31,8 @@ public class OAuthInterceptor extends HandlerInterceptorAdapter{
 			return true;
 		}
 		if(request.getSession().getAttribute(ConstUtils.SESSION_USER) == null){
-            request.getRequestDispatcher("/error/" + Result.NOT_OAUTH).forward(request, response);
+			request.setAttribute(GlobalExceptionHandler.ERROR_RESULT, Result.unauthorized());
+			request.getRequestDispatcher(GlobalExceptionHandler.ERROR_URI).forward(request, response);
 			return false;
 		}
 		return true;
