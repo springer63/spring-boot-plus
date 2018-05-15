@@ -37,28 +37,28 @@ public class DataSourceConfigure {
 	@Autowired
 	private Environment env;
 
-	@Value("${db.driver-class:com.mysql.jdbc.Driver}")
-	private String driverName;
+	@Value("${datasource.driver-class-name:com.mysql.jdbc.Driver}")
+	private String driverClassName;
 
-	@Value("${db.url}")
+	@Value("${datasource.url}")
 	private String url;
 
-	@Value("${db.username}")
+	@Value("${datasource.username}")
 	private String username;
 
-	@Value("${db.password}")
+	@Value("${datasource.password}")
 	private String password;
 
-	@Value("${db.init-size:50}")
+	@Value("${datasource.init-size:50}")
 	private int  initSize;
 
-	@Value("${db.min-idle:10}")
+	@Value("${datasource.min-idle:10}")
 	private int minIdle;
 
-	@Value("${db.max-active:200}")
+	@Value("${datasource.max-activ:200}")
 	private int maxActive;
 
-	@Value("${db.max-wait:30000}")
+	@Value("${datasource.max-watit:30000}")
 	private int maxWait;
 
 	/**
@@ -69,7 +69,7 @@ public class DataSourceConfigure {
 	public DataSource dataSource(){
 		DruidDataSource dataSource = new DruidDataSource();
 		dataSource.setUrl(url);
-		dataSource.setDriverClassName(this.driverName);
+		dataSource.setDriverClassName(this.driverClassName);
 		dataSource.setUsername(this.username);
 		dataSource.setPassword(this.password);
 		dataSource.setInitialSize(this.initSize);
