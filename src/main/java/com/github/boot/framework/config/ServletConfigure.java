@@ -10,6 +10,7 @@ import com.github.boot.framework.web.interceptor.OAuthInterceptor;
 import com.github.boot.framework.web.interceptor.ResubmitInterceptor;
 import com.github.boot.framework.web.listener.ContextLoadedListener;
 import com.github.boot.framework.web.resolver.FormArgumentResolver;
+import com.github.boot.framework.web.resolver.GenericArgumentResolver;
 import com.github.boot.framework.web.resolver.SessionArgumentResolver;
 import com.github.boot.framework.web.result.ResultJsonSerializer;
 import com.github.boot.framework.web.result.ReturnJsonHandler;
@@ -109,6 +110,8 @@ public class ServletConfigure extends WebMvcConfigurerAdapter implements Applica
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
 		HandlerMethodArgumentResolver formResolver = new FormArgumentResolver(converters);
 		HandlerMethodArgumentResolver sessionResolver = new SessionArgumentResolver();
+		HandlerMethodArgumentResolver genericResolver = new GenericArgumentResolver();
+		argumentResolvers.add(genericResolver);
 		argumentResolvers.add(formResolver);
 		argumentResolvers.add(sessionResolver);
 	}
