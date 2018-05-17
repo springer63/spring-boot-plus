@@ -6,11 +6,13 @@ import com.github.boot.framework.jpa.dao.BaseDaoRepositoryFactoryBean;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -31,6 +33,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
+@EntityScan(basePackageClasses = {Jsr310JpaConverters.class})
 @EnableJpaRepositories(basePackages = {"${jpa.dao.packages}"}, repositoryFactoryBeanClass = BaseDaoRepositoryFactoryBean.class)
 public class DataSourceConfigure {
 

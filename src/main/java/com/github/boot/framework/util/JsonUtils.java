@@ -8,24 +8,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 /**
  * 依赖Jackson框架封装的工具类
  * 用于Object与JSON，XML之间的互转
+ * @author chenjianhui
  */
 public class JsonUtils {
 	
 	private static ObjectMapper objMapper;
 	
 	private static XmlMapper xmlMapper;
-	
-	
+
 	static{
 		objMapper = new ObjectMapper();
 		Hibernate5Module hm = new Hibernate5Module();
 		hm.configure(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION, false);
+		objMapper.registerModule(new ParameterNamesModule());
+		objMapper.registerModule(new Jdk8Module());
+		objMapper.registerModule(new JavaTimeModule());
 		objMapper.registerModule(hm);
-		//objMapper.setSerializationInclusion(Include.NON_NULL);
+		objMapper.setSerializationInclusion(Include.NON_NULL);
 		objMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
 		JacksonXmlModule module = new JacksonXmlModule();
 		module.setDefaultUseWrapper(false);
