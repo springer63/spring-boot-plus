@@ -20,7 +20,7 @@ public class ScheduleConfigure implements SchedulingConfigurer {
     @Value("${schedule.thread.pool.size:}")
     private Integer poolSize;
 
-    private final static int DEFAULT_THREAD_POOL_SIZE = 2 * Runtime.getRuntime().availableProcessors();
+    private final static int DEFAULT_THREAD_POOL_SIZE = 10 * Runtime.getRuntime().availableProcessors();
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
