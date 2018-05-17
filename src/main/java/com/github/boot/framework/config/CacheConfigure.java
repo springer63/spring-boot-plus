@@ -40,15 +40,24 @@ public class CacheConfigure extends CachingConfigurerSupport {
     public CacheManager cacheManager(RedissonClient redissonClient) throws Exception{
         Set<Class<?>> classes = new PackageUtils(cachePackages.split(","), org.springframework.cache.annotation.CacheConfig.class).scan();
         Map<String, CacheConfig> configMap = new HashMap<>(classes.size());
-        CacheConfig baseConfig = new CacheConfig(24 * 60 * 1000, 12 * 60 * 1000);
+        CacheConfig baseConfig = new CacheConfig(24 * 60 * 60 * 1000, 12 * 60 * 60 * 1000);
         for (Class<?> clazz: classes){
-            CacheConfig cacheConfig = baseConfig;
-            CacheTime cacheTime = clazz.getAnnotation(CacheTime.class);
-            if(cacheTime != null){
-                cacheConfig = new CacheConfig(cacheTime.ttl(), cacheTime.tti());
+            CacheTime[] cacheTimes = clazz.getAnnotationsByType(CacheTime.class);
+            Map<String, CacheConfig> cacheTimeMap = new HashMap<>(5);
+            if(cacheTimes != null && cacheTimes.length > 0){
+                for (CacheTime t : cacheTimes){
+                    CacheConfig cacheConfig = new CacheConfig(t.ttl(), t.tti());
+                    cacheTimeMap.put(t.cacheName(), cacheConfig);
+                }
             }
-            org.springframework.cache.annotation.CacheConfig annotation = clazz.getAnnotation(org.springframework.cache.annotation.CacheConfig.class);
-            configMap.put(annotation.cacheNames()[0], cacheConfig);
+            org.springframework.cache.annotation.CacheConfig config = clazz.getAnnotation(org.springframework.cache.annotation.CacheConfig.class);
+            for (String name : config.cacheNames()){
+                CacheConfig cacheConfig = cacheTimeMap.get(name);
+                if(cacheConfig == null){
+                    cacheConfig = baseConfig;
+                }
+                configMap.put(name, cacheConfig);
+            }
         }
         return new RedissonSpringCacheManager(redissonClient, configMap);
     }
