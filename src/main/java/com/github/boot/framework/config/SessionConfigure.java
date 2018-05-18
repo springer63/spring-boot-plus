@@ -22,9 +22,15 @@ import org.springframework.util.StringUtils;
 @EnableSpringHttpSession
 public class SessionConfigure {
 
+    /**
+     * Redis Session Key Prefix
+     */
     @Value("${session.key.prefix:}")
     private String keyPrefix;
 
+    /**
+     * Session Cookie Domain
+     */
     @Value("${session.cookie.domain:}")
     private String domainName;
 
