@@ -50,41 +50,4 @@ public class RocketMqConfigure {
         return listenerContainer;
     }
 
-   /* @Value("${aliyun.ons.secretKey}")
-    private String secretKey;
-
-    @Value("${aliyun.ons.accessKey}")
-    private String accessKey;
-
-    @Value("${aliyun.ons.producerId}")
-    private String producerId;
-
-    @Value("${aliyun.ons.consumerId}")
-    private String consumerId;
-
-    @Value("${aliyun.ons.consumerThreadNums:10}")
-    private int consumerThreadNums;
-
-    @Bean
-    @Autowired
-    public OnsMessageProducer messageProducer(Serializer<AbstractMessage> serializer){
-        OnsMessageProducer producer = new OnsMessageProducer();
-        producer.setSecretKey(this.secretKey);
-        producer.setAccessKey(this.accessKey);
-        producer.setProducerId(this.producerId);
-        producer.setSerializer(serializer);
-        return producer;
-    }
-
-    @Bean
-    @Autowired
-    public OnsMessageListenerContainer messageListenerContainer(Serializer<AbstractMessage> serializer){
-        OnsMessageListenerContainer listenerContainer = new OnsMessageListenerContainer();
-        listenerContainer.setSecretKey(this.secretKey);
-        listenerContainer.setAccessKey(this.accessKey);
-        listenerContainer.setConsumerId(this.consumerId);
-        listenerContainer.setConsumeThreadNums(this.consumerThreadNums);
-        listenerContainer.setSerializer(serializer);
-        return listenerContainer;
-    }*/
 }
