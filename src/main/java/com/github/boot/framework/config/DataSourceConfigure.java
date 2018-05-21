@@ -3,10 +3,10 @@ package com.github.boot.framework.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.boot.framework.jpa.MySQL5Dialect;
 import com.github.boot.framework.jpa.dao.BaseDaoRepositoryFactoryBean;
+import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +29,10 @@ import java.util.Properties;
  * @version
  * @date：2016年3月8日 下午12:09:35
  */
-@SuppressWarnings("ALL")
 @Configuration
+@SuppressWarnings("ALL")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@EntityScan(basePackageClasses = {Jsr310JpaConverters.class})
 @EnableJpaRepositories(basePackages = {"${jpa.dao.packages}"}, repositoryFactoryBeanClass = BaseDaoRepositoryFactoryBean.class)
 public class DataSourceConfigure {
 
@@ -101,7 +100,9 @@ public class DataSourceConfigure {
 		entityManagerFactory.setPersistenceUnitName("PERSISTENCE_UNIT");
 		entityManagerFactory.setDataSource(dataSource());
 		entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-		entityManagerFactory.setPackagesToScan(env.getProperty("jpa.entity.packages"));
+		String[] packages = env.getProperty("jpa.entity.packages", "").split(",");
+		packages = ArrayUtils.add(packages, Jsr310JpaConverters.class.getPackage().getName());
+		entityManagerFactory.setPackagesToScan(packages);
 		Properties jpaProperties = new Properties();
 		jpaProperties.setProperty(AvailableSettings.SHOW_SQL, env.getProperty("jpa.show-sql", "false"));
 		jpaProperties.setProperty(AvailableSettings.FORMAT_SQL,  env.getProperty("jpa.format-sql", "false"));
