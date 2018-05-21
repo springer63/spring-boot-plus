@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
  * @date 2017/3/12
  */
 @Configurable
-public class MqConfigure {
+public class RocketMqConfigure {
 
     @Value("${mq.namesrv}")
     private String namesrv;
