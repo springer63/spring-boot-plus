@@ -19,10 +19,10 @@ import org.springframework.context.annotation.Bean;
 @Configurable
 public class RocketMqConfigure {
 
-    @Value("${mq.namesrv}")
+    @Value("${rocket.mq.namesrv}")
     private String namesrv;
 
-    @Value("${mq.consumer.group-name:mqConsumer}")
+    @Value("${rocket.mq.consumer.group-name:${spring.application.name}}")
     private String groupName;
 
 	@Bean
