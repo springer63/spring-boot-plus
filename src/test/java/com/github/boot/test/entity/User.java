@@ -1,8 +1,10 @@
 package com.github.boot.test.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.boot.framework.jpa.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * ${DESCRIPTION}
@@ -23,6 +25,9 @@ public class User extends BaseEntity<User> {
     private String phone;
 
     private int age;
+
+    @JsonFormat(shape= JsonFormat.Shape.NUMBER)
+    private LocalDateTime addTime;
 
     public Long getId() {
         return id;
@@ -54,5 +59,13 @@ public class User extends BaseEntity<User> {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public LocalDateTime getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(LocalDateTime addTime) {
+        this.addTime = addTime;
     }
 }
