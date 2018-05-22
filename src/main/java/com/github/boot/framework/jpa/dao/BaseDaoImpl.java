@@ -118,7 +118,9 @@ public class BaseDaoImpl<T, ID extends Serializable> extends SimpleJpaRepository
 
 	@Override
 	public <S extends T> S save(S entity) {
-		return super.saveAndFlush(entity);
+		super.save(entity);
+		super.flush();
+		return entity;
 	}
 
 	@Override
