@@ -5,9 +5,9 @@ import com.github.boot.framework.support.mq.rocketmq.RocketMessageListenerContai
 import com.github.boot.framework.support.mq.rocketmq.RocketMessageProducer;
 import com.github.boot.framework.support.serializer.JacksonSerializer;
 import com.github.boot.framework.support.serializer.Serializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -26,27 +26,26 @@ public class RocketMqConfigure {
     private String groupName;
 
 	@Bean
-	@SuppressWarnings({ "unchecked", "rawtypes" })
     public Serializer<AbstractMessage>  serializer(){
-        return new JacksonSerializer();
+        return new JacksonSerializer<>();
     }
 
     @Bean
-    @Autowired
-    public RocketMessageProducer messageProducer(Serializer<AbstractMessage> serializer){
+    @ConditionalOnExpression("'${message.queue.side}'!= 'consumer'")
+    public RocketMessageProducer messageProducer(){
         RocketMessageProducer producer = new RocketMessageProducer();
         producer.setNamesrv(this.namesrv);
-        producer.setSerializer(serializer);
+        producer.setSerializer(serializer());
         return producer;
     }
 
     @Bean
-    @Autowired
-    public RocketMessageListenerContainer messageListenerContainer(Serializer<AbstractMessage> serializer){
+    @ConditionalOnExpression("'${message.queue.side}'!= 'producer'")
+    public RocketMessageListenerContainer messageListenerContainer(){
         RocketMessageListenerContainer listenerContainer = new RocketMessageListenerContainer();
         listenerContainer.setNamesrv(namesrv);
         listenerContainer.setGroupName(groupName);
-        listenerContainer.setSerializer(serializer);
+        listenerContainer.setSerializer(serializer());
         return listenerContainer;
     }
 
