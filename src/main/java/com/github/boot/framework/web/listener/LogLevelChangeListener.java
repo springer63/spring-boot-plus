@@ -6,7 +6,6 @@ import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggingSystem;
 import org.springframework.boot.logging.logback.LogbackLoggingSystem;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 
 /**
  * Logger Level Config Change Listener
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
  * @author cjh
  * @date 2017/6/19
  */
-@Component
 public class LogLevelChangeListener implements ApplicationListener<ConfigChangeEvent> {
 
     private final static String LOGGING_LEVEL_ROOT = "logging.level.root";

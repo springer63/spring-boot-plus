@@ -1,12 +1,10 @@
 package com.github.boot.framework.config;
 
-import com.github.boot.framework.support.mq.MessageProducer;
-import com.github.boot.framework.support.stomp.StompMessageSender;
+import com.github.boot.framework.support.stomp.StompMessageListener;
 import com.github.boot.framework.util.ConstUtils;
 import com.github.boot.framework.util.ServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -45,9 +43,8 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 	private static final Logger logger = LoggerFactory.getLogger(WebSocketConfigure.class);
 
 	@Bean
-	@ConditionalOnBean(MessageProducer.class)
-	public StompMessageSender stompMessageSender(){
-		return new StompMessageSender();
+	public StompMessageListener stompMessageListener(){
+		return new StompMessageListener();
 	}
 
 	@Override
@@ -64,7 +61,7 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 						}
 						Object userId = session.getAttribute(ConstUtils.SESSION_USER_ID);
 						String clientIp = ServletUtils.getClientIp(serverRequest.getServletRequest());
-						return new MyPrincipal(userId, clientIp);
+						return new DefaultPrincipal(userId, clientIp);
 					}
 				})
 				.setAllowedOrigins("*");
@@ -95,7 +92,7 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 	public void configureClientInboundChannel(ChannelRegistration registration) {
 		//设置消息输入通道的线程池线程数
 		registration.taskExecutor().corePoolSize(10).maxPoolSize(200).keepAliveSeconds(60);
-		registration.setInterceptors(new ChannelInterceptorAdapter() {
+		registration.interceptors(new ChannelInterceptorAdapter() {
 			@Override
 			public Message<?> preSend(Message<?> message, MessageChannel channel) {
 				StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
@@ -117,7 +114,7 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 	@Override
 	public void configureClientOutboundChannel(ChannelRegistration registration) {
 		registration.taskExecutor().corePoolSize(10).maxPoolSize(200);
-		registration.setInterceptors(new ChannelInterceptorAdapter() {
+		registration.interceptors(new ChannelInterceptorAdapter() {
 			@Override
 			public Message<?> preSend(Message<?> message, MessageChannel channel) {
 				StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
@@ -131,12 +128,14 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 	public static class SessionAuthHandshakeInterceptor implements HandshakeInterceptor {
 
 		@Override
-		public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+		public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
+				   WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
 			return true;
 		}
 
 		@Override
-		public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
+		public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
+				   WebSocketHandler wsHandler, Exception exception) {
 			if(exception != null){
 				logger.info(exception.getMessage());
 				return;
@@ -155,13 +154,19 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 	/**
 	 * 用户主要信息
 	 */
-	public static class MyPrincipal implements Principal{
+	public static class DefaultPrincipal implements Principal{
 
+		/**
+		 * 用户ID
+		 */
 		private Object userId;
 
+		/**
+		 * 客户端IP
+		 */
 		private String clientIp;
 
-		public MyPrincipal(Object userId, String clientIp) {
+		public DefaultPrincipal(Object userId, String clientIp) {
 			this.userId = userId;
 			this.clientIp = clientIp;
 		}
@@ -171,6 +176,10 @@ public class WebSocketConfigure extends AbstractSessionWebSocketMessageBrokerCon
 			return String.valueOf(userId);
 		}
 
+		/**
+		 * 获取客户端IP
+		 * @return
+		 */
 		public String getClientIp() {
 			return clientIp;
 		}

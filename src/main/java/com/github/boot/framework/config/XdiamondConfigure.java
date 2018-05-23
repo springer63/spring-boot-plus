@@ -1,5 +1,6 @@
 package com.github.boot.framework.config;
 
+import com.github.boot.framework.web.listener.LogLevelChangeListener;
 import io.github.xdiamond.client.XDiamondConfig;
 import io.github.xdiamond.client.annotation.AllKeyListener;
 import io.github.xdiamond.client.event.ConfigEvent;
@@ -86,6 +87,11 @@ public class XdiamondConfigure {
     @Bean
     public ConfigChangeListener configChangeListener(){
         return new ConfigChangeListener();
+    }
+
+    @Bean
+    public LogLevelChangeListener logLevelChangeListener(){
+        return new LogLevelChangeListener();
     }
 
     /**
