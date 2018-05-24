@@ -11,7 +11,7 @@ public class ConstUtils {
 	/**
 	 * 自动登录Token
 	 */
-	public static final String COOKIE_LOGIN_TOKEN = "TOKEN";
+	public static final String TOKEN_NAME = "TOKEN";
 
 	/**
 	 * session中存放的请求标识的key值
