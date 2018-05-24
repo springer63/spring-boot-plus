@@ -8,7 +8,7 @@ import java.util.Date;
  * @author chenjianhui
  * @create 2018/05/24
  **/
-public class Authentication {
+public class Authentication<T> {
 
     /**
      * 授权用户id
@@ -18,7 +18,7 @@ public class Authentication {
     /**
      * 授权用户信息
      */
-    private Object userInfo;
+    private T userInfo;
 
     /**
      * 过期时间
@@ -38,7 +38,7 @@ public class Authentication {
      * @param userId 用户ID
      * @param userInfo 用户信息
      */
-    public Authentication(Object userId, Object userInfo) {
+    public Authentication(Object userId, T userInfo) {
         this.userId = userId;
         this.userInfo = userInfo;
         this.authenticated = true;
@@ -60,11 +60,11 @@ public class Authentication {
         this.userId = userId;
     }
 
-    public Object getUserInfo() {
+    public T getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(Object userInfo) {
+    public void setUserInfo(T userInfo) {
         this.userInfo = userInfo;
     }
 

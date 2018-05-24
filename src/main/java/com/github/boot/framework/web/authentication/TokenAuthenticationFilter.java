@@ -62,7 +62,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
         Authentication authenticate = authenticationManager.authenticate(authentication);
         session.setAttribute(ConstUtils.SESSION_USER_ID, authenticate.getUserId());
-        session.setAttribute(ConstUtils.SESSION_USER, authenticate.getUserInfo());
         filterChain.doFilter(request, response);
     }
 

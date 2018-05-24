@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
  * @author chenjianhui
  * @create 2018/05/24
  **/
-public abstract class AuthenticationManager {
+public abstract class AuthenticationManager<T> {
 
     /**
      * 应用名称
@@ -30,25 +30,37 @@ public abstract class AuthenticationManager {
 
     /**
      * 用户授权
-     * @param token
+     * @param userId
      * @return
      */
-    public abstract Authentication authenticate(Authentication token);
+    public abstract Authentication<T> authenticate(Object userId);
 
     /**
      * 用户登录
      * @param authentication
      * @return
      */
-    public Authentication login(Authentication authentication){
+    public Authentication<T> login(Authentication<T> authentication){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         HttpSession session = request.getSession();
         HttpServletResponse response = requestAttributes.getResponse();
         session.setAttribute(ConstUtils.SESSION_USER_ID, authentication.getUserId());
-        session.setAttribute(ConstUtils.SESSION_USER, authentication.getUserInfo());
         tokenManager.sendToken(tokenManager.createToken(authentication), response);
         return authentication;
+    }
+
+    /**
+     * 获取授权用户信息
+     * @return
+     */
+    public T getUser(){
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        HttpSession session = request.getSession();
+        Object userId = session.getAttribute(ConstUtils.SESSION_USER_ID);
+        Authentication<T> authenticate = authenticate(userId);
+        return authenticate.getUserInfo();
     }
 
     public String getApplication() {
