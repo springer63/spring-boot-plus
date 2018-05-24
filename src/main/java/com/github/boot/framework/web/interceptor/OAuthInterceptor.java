@@ -30,7 +30,7 @@ public class OAuthInterceptor extends HandlerInterceptorAdapter{
 		if(oAuth == null || !oAuth.required()){
 			return true;
 		}
-		if(request.getSession().getAttribute(ConstUtils.SESSION_USER) == null){
+		if(request.getSession().getAttribute(ConstUtils.SESSION_USER_ID) == null){
 			request.setAttribute(GlobalExceptionHandler.ERROR_RESULT, Result.unauthorized());
 			request.getRequestDispatcher(GlobalExceptionHandler.ERROR_URI).forward(request, response);
 			return false;
