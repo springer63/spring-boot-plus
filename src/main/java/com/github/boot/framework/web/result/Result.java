@@ -153,8 +153,9 @@ public final class Result<T> implements Serializable{
 		return data;
 	}
 
-	public void setData(T data) {
+	public Result<T> setData(T data) {
 		this.data = data;
+		return this;
 	}
 
 	public Object getUserId() {
@@ -187,15 +188,17 @@ public final class Result<T> implements Serializable{
 		return code;
 	}
 
-	public void setCode(int code) {
+	public Result<T> setCode(int code) {
 		this.code = code;
+		return this;
 	}
 
 	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public Result<T> setMessage(String message) {
 		this.message = message;
+		return this;
 	}
 }
