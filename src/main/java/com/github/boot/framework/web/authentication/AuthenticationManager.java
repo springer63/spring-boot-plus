@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 /**
  * AuthenticationManager
  *
- * ID 用户ID类型
  * T 用户类型
  * @author chenjianhui
  * @create 2018/05/24
