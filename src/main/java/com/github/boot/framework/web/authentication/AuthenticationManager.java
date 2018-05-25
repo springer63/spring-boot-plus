@@ -26,7 +26,7 @@ public abstract class AuthenticationManager {
     /**
      * Token 管理器
      */
-    private TokenManager tokenManager = new JwsTokenManager();
+    private TokenManager tokenManager = new JwtTokenManager();
 
     /**
      * 用户授权
@@ -38,17 +38,18 @@ public abstract class AuthenticationManager {
     /**
      * 用户登录
      * @param authentication
-     * @return
+     * @return 返回TOKEN
      */
-    public Authentication login(Authentication authentication){
+    public String login(Authentication authentication){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         HttpSession session = request.getSession();
         HttpServletResponse response = requestAttributes.getResponse();
         session.setAttribute(ConstUtils.SESSION_USER_ID, authentication.getUserId());
         session.setAttribute(ConstUtils.SESSION_USER, authentication.getUserInfo());
-        tokenManager.sendToken(tokenManager.createToken(authentication), response);
-        return authentication;
+        String token = tokenManager.createToken(authentication);
+        tokenManager.sendToken(token, response);
+        return token;
     }
 
     /**

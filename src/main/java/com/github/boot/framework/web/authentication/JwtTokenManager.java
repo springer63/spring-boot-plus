@@ -18,7 +18,7 @@ import java.util.Date;
  * @author chenjianhui
  * @create 2018/05/24
  **/
-public class JwsTokenManager implements TokenManager {
+public class JwtTokenManager implements TokenManager {
 
     /**
      * 加密KEY
@@ -40,7 +40,7 @@ public class JwsTokenManager implements TokenManager {
      */
     private String encodedKey = "L7A/6zARSkK1j7Vd5SDD9pSSqZlqF7mAhiOgRbgv9Smce6tf4cJnvKOjtKPxNNnWQj+2lQEScm3XIUjhW+YVZg==";
 
-    public JwsTokenManager() {
+    public JwtTokenManager() {
         this.signatureAlgorithm = SignatureAlgorithm.HS512;
         byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
         this.secretKey = new SecretKeySpec(decodedKey, this.signatureAlgorithm.getJcaName());
