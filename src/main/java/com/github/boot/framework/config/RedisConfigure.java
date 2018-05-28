@@ -23,10 +23,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @Description Redis配置
+ * Redis配置
  * @author cjh
  * @version 1.0
- * @date：2017年3月15日 下午6:29:49
+ * @date 2017/3/15 18:29:49
  */
 @Configuration
 public class RedisConfigure{

@@ -26,4 +26,20 @@ public interface Criterion<T> {
         return null;
     }
 
+    /**
+     * 获取排序字段名称
+     * @return
+     */
+    default String getSortProperty(){
+        return null;
+    }
+
+    /**
+     * 获取排序方向 DESC ASC
+     * @return
+     */
+    default String getSortDirection(){
+        return "DESC";
+    }
+
 }

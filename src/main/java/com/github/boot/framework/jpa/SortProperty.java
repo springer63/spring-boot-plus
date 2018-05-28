@@ -8,11 +8,23 @@ import java.lang.annotation.*;
  * @author chenjianhui
  * @create 2018/05/09
  **/
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
 public @interface SortProperty {
+
+    /**
+     * 属性名称
+     * @return
+     */
+    String value() default "";
+
+    /**
+     * 排序方向
+     * @return
+     */
+    String direction() default "DESC";
 
 
 }

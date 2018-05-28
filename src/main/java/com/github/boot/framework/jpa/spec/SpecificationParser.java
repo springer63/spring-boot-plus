@@ -2,7 +2,6 @@ package com.github.boot.framework.jpa.spec;
 
 import com.github.boot.framework.jpa.Condition;
 import com.github.boot.framework.jpa.Criterion;
-import com.github.boot.framework.jpa.SortDirection;
 import com.github.boot.framework.jpa.SortProperty;
 import com.github.boot.framework.util.DateUtils;
 import com.github.boot.framework.util.ReflectionUtils;
@@ -42,22 +41,14 @@ public class SpecificationParser {
      * @return
      */
     public static <T> Pageable pageable(Criterion<T> criterion){
-        Field[] fields = criterion.getClass().getFields();
-        String sortProperty = null;
-        String sortDirection = null;
-        for (Field f : fields){
-            SortProperty sp = f.getAnnotation(SortProperty.class);
-            if(sp != null){
-                sortProperty = (String) ReflectionUtils.getFieldValue(criterion, f.getName());
-                continue;
-            }
-            SortDirection sd = f.getAnnotation(SortDirection.class);
-            if(sd != null){
-                sortDirection = (String) ReflectionUtils.getFieldValue(criterion, f.getName());
-            }
+        String sortProperty = criterion.getSortProperty();
+        if(sortProperty != null){
+            Sort sort = new Sort(Sort.Direction.fromString(criterion.getSortDirection()), sortProperty);
+            return new PageRequest(criterion.getPage(), criterion.getSize(), sort);
         }
-        if(sortProperty != null && sortDirection != null){
-            Sort sort = new Sort(Sort.Direction.fromString(sortDirection), sortProperty);
+        SortProperty sp = criterion.getClass().getAnnotation(SortProperty.class);
+        if(sp != null){
+            Sort sort = new Sort(Sort.Direction.fromString(sp.direction()), sp.value());
             return new PageRequest(criterion.getPage(), criterion.getSize(), sort);
         }
         return new PageRequest(criterion.getPage(), criterion.getSize());
