@@ -12,20 +12,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Repeatable(SortPropertys.class)
-public @interface SortProperty {
+public @interface SortPropertys {
 
-    /**
-     * 属性名称
-     * @return
-     */
-    String value() default "";
-
-    /**
-     * 排序方向
-     * @return
-     */
-    String direction() default "DESC";
-
+    SortProperty[] value();
 
 }

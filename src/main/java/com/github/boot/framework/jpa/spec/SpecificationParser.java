@@ -18,8 +18,11 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Specification 查询解析工具
@@ -46,9 +49,12 @@ public class SpecificationParser {
             Sort sort = new Sort(Sort.Direction.fromString(criterion.getSortDirection()), sortProperty);
             return new PageRequest(criterion.getPage(), criterion.getSize(), sort);
         }
-        SortProperty sp = criterion.getClass().getAnnotation(SortProperty.class);
-        if(sp != null){
-            Sort sort = new Sort(Sort.Direction.fromString(sp.direction()), sp.value());
+        SortProperty[] sps = criterion.getClass().getAnnotationsByType(SortProperty.class);
+        if(sps != null){
+            List<Sort.Order> orders = Arrays.stream(sps)
+                    .map(e -> new Sort.Order(Sort.Direction.fromString(e.direction()), e.value()))
+                    .collect(Collectors.toList());
+            Sort sort = new Sort(orders);
             return new PageRequest(criterion.getPage(), criterion.getSize(), sort);
         }
         return new PageRequest(criterion.getPage(), criterion.getSize());
