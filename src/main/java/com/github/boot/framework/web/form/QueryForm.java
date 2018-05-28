@@ -1,8 +1,6 @@
 package com.github.boot.framework.web.form;
 
 import com.github.boot.framework.jpa.Criterion;
-import com.github.boot.framework.jpa.SortDirection;
-import com.github.boot.framework.jpa.SortProperty;
 import com.github.boot.framework.support.validate.ValueSet;
 
 /**
@@ -14,18 +12,17 @@ import com.github.boot.framework.support.validate.ValueSet;
 public abstract class QueryForm<T> implements Form, Criterion<T> {
 
     /**
-     * 排序字段
+     * 排序字段名称， 按什么字段排序
      */
-    @SortProperty
     private String sortProperty;
 
     /**
      * 排序方向 ASC, DESC
      */
-    @SortDirection
     @ValueSet({"ASC", "DESC"})
     private String sortDirection = "DESC";
 
+    @Override
     public String getSortProperty() {
         return sortProperty;
     }
@@ -34,6 +31,7 @@ public abstract class QueryForm<T> implements Form, Criterion<T> {
         this.sortProperty = sortProperty;
     }
 
+    @Override
     public String getSortDirection() {
         return sortDirection;
     }
