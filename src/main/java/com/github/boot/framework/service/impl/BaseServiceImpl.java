@@ -75,6 +75,10 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
 
 	@Override
 	public List<T> findAll(Criterion<T> criterion) {
+		Sort sort = SpecificationParser.sort(criterion);
+		if(sort != null){
+			return dao.findAll(SpecificationParser.condition(criterion), sort);
+		}
 		return dao.findAll(SpecificationParser.condition(criterion));
 	}
 

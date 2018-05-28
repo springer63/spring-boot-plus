@@ -44,10 +44,24 @@ public class SpecificationParser {
      * @return
      */
     public static <T> Pageable pageable(Criterion<T> criterion){
+        Sort sort = sort(criterion);
+        if(sort != null){
+            return new PageRequest(criterion.getPage(), criterion.getSize(), sort);
+        }
+        return new PageRequest(criterion.getPage(), criterion.getSize());
+    }
+
+    /**
+     * 构建排序查询条件
+     * @param criterion
+     * @param <T>
+     * @return
+     */
+    public static <T> Sort sort(Criterion<T> criterion){
         String sortProperty = criterion.getSortProperty();
         if(sortProperty != null){
             Sort sort = new Sort(Sort.Direction.fromString(criterion.getSortDirection()), sortProperty);
-            return new PageRequest(criterion.getPage(), criterion.getSize(), sort);
+            return sort;
         }
         SortProperty[] sps = criterion.getClass().getAnnotationsByType(SortProperty.class);
         if(sps != null){
@@ -55,9 +69,9 @@ public class SpecificationParser {
                     .map(e -> new Sort.Order(Sort.Direction.fromString(e.direction()), e.value()))
                     .collect(Collectors.toList());
             Sort sort = new Sort(orders);
-            return new PageRequest(criterion.getPage(), criterion.getSize(), sort);
+            return sort;
         }
-        return new PageRequest(criterion.getPage(), criterion.getSize());
+        return null;
     }
 
     /**
@@ -69,7 +83,7 @@ public class SpecificationParser {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static <T> Specification<T> condition(Criterion<T> criterion){
         Field[] fields = criterion.getClass().getDeclaredFields();
-        PredicateBuilder<T> builder = Specifications.<T>and();
+        PredicateBuilder<T> builder = Specifications.and();
         String property;
         Object value;
         Field upperField = null;
