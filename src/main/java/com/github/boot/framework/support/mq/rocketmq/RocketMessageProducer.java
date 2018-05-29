@@ -87,7 +87,7 @@ public class RocketMessageProducer implements InitializingBean, DisposableBean, 
      * @param message
      */
     private org.apache.rocketmq.common.message.Message createRocketMessage(AbstractMessage message) {
-        return new Message(message.topic(), "*", message.getKey(), serializer.serialize(message));
+        return new Message(message.topic(), message.getTag(), message.getKey(), serializer.serialize(message));
     }
 
     public void setNamesrv(String namesrv) {

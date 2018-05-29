@@ -51,9 +51,12 @@ public abstract class AbstractMessageListenerContainer implements ApplicationCon
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		Map<String, MessageListener> map = applicationContext.getBeansOfType(MessageListener.class);
 		for (MessageListener listener : map.values()) {
-			ParameterizedType type = (ParameterizedType) listener.getClass().getGenericInterfaces()[0];
-			Class<AbstractMessage> clazz = (Class<AbstractMessage>) type.getActualTypeArguments()[0];
-			MessageTopic channel = getMessageTopic(clazz);
+			MessageTopic channel = listener.getClass().getAnnotation(MessageTopic.class);
+			if(channel == null){
+				ParameterizedType type = (ParameterizedType) listener.getClass().getGenericInterfaces()[0];
+				Class<AbstractMessage> clazz = (Class<AbstractMessage>) type.getActualTypeArguments()[0];
+				channel = getMessageTopic(clazz);
+			}
 			List<MessageListener<AbstractMessage>> listeners = listenerMap.get(channel);
 			if(listeners == null){
 				listeners = new ArrayList<>();

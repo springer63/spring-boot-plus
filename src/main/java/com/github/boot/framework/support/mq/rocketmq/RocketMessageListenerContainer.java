@@ -65,9 +65,9 @@ public class RocketMessageListenerContainer extends AbstractMessageListenerConta
         }
         for(MessageTopic topic : getAllTopics()){
             if(topic.model() == com.github.boot.framework.support.mq.MessageModel.CLUSTERING){
-                getClusterConsumer().subscribe(topic.value(), "*");
+                getClusterConsumer().subscribe(topic.value(), topic.tag());
             }else{
-                getBroadcastConsumer().subscribe(topic.value(), "*");
+                getBroadcastConsumer().subscribe(topic.value(), topic.tag());
             }
         }
         if(this.broadcastConsumer != null){
