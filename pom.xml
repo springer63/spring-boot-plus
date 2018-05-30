@@ -5,14 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.boot</groupId>
     <artifactId>spring-boot-plus</artifactId>
-    <version>1.1.10</version>
+    <version>1.1.11</version>
     <description>spring-boot-plus</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <github.global.server>github</github.global.server>
-        <author>springer63</author>
-        <commotter>springer63</commotter>
+        <author>springer</author>
+        <commotter>springer</commotter>
     </properties>
 
     <dependencyManagement>
@@ -209,6 +208,21 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
@@ -223,30 +237,7 @@
                     <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/maven-repo</altDeploymentRepository>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.12</version>
-                <configuration>
-                    <message>Maven artifacts for ${project.version}</message>
-                    <noJekyll>true</noJekyll>
-                    <outputDirectory>${project.build.directory}/maven-repo</outputDirectory>
-                    <branch>refs/heads/master</branch>
-                    <includes>
-                        <include>**/*</include>
-                    </includes>
-                    <repositoryName>maven-repo</repositoryName>
-                    <repositoryOwner>springer63</repositoryOwner>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                    </execution>
-                </executions>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -284,6 +275,19 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>user-release</id>
+            <name>User Project Release</name>
+            <url>http://192.168.1.202:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>user-snapshots</id>
+            <name>User Project SNAPSHOTS</name>
+            <url>http://192.168.1.202:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 
 </project>
