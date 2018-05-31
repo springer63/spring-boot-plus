@@ -17,11 +17,6 @@ public abstract class AbstractMessage implements Serializable{
 	private String key;
 
 	/**
-	 * 消息标签
-	 */
-	private String tag;
-
-	/**
 	 * 根据消息体类型获取消息频道
 	 * @return
 	 */
@@ -33,6 +28,15 @@ public abstract class AbstractMessage implements Serializable{
 		return topic.value();
 	}
 
+	/**
+	 * 根据消息体类型获取消息标签
+	 * @return
+	 */
+	public String tag(){
+		MessageTopic topic = this.getClass().getAnnotation(MessageTopic.class);
+		return topic.tag();
+	}
+
 	public String getKey() {
 		return this.key;
 	}
@@ -41,14 +45,4 @@ public abstract class AbstractMessage implements Serializable{
 		this.key = key;
 	}
 
-	public String getTag() {
-		if(this.tag == null){
-			return "*";
-		}
-		return tag;
-	}
-
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
 }
