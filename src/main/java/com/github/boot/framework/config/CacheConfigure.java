@@ -4,6 +4,8 @@ import com.github.boot.framework.support.cache.CacheKeyGenerator;
 import com.github.boot.framework.support.cache.CacheTime;
 import com.github.boot.framework.util.PackageUtils;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
+import org.redisson.codec.CompositeCodec;
 import org.redisson.spring.cache.CacheConfig;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -59,7 +61,11 @@ public class CacheConfigure extends CachingConfigurerSupport {
                 configMap.put(name, cacheConfig);
             }
         }
-        return new RedissonSpringCacheManager(redissonClient, configMap);
+
+        RedissonSpringCacheManager  cacheManager = new RedissonSpringCacheManager(redissonClient, configMap);
+        RedisConfigure.CacheKryoCodec valueCode = new RedisConfigure.CacheKryoCodec();
+        cacheManager.setCodec(new CompositeCodec(new StringCodec(), valueCode, valueCode));
+        return cacheManager;
     }
 
 

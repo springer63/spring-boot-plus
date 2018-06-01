@@ -149,6 +149,11 @@ public class RedisConfigure{
 		public Encoder getValueEncoder() {
 			return this.encoder;
 		}
+
+		@Override
+		public ClassLoader getClassLoader() {
+			return CacheKryoCodec.class.getClassLoader();
+		}
 	}
 
 }
