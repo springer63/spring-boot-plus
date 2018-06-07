@@ -16,7 +16,7 @@ public class JsonUtilsTest {
     @Test
     public void testJson(){
         Model map = new Model();
-        map.setA(new BigDecimal("0.33333300000012200214522455"));
+        map.setA(new BigDecimal(0.33333300000012200214522455));
         String json = JsonUtils.toJson(map);
         System.out.println(json);
     }
