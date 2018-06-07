@@ -29,17 +29,17 @@ public abstract class AuthenticationManager {
 
     /**
      * 用户授权
-     * @param userId
+     * @param identify
      * @return
      */
-    public abstract Authentication authenticate(Object userId);
+    public abstract Authentication authenticate(Object identify);
 
     /**
      * 用户登录
      * @param authentication
      * @return 返回TOKEN
      */
-    public String login(Authentication authentication){
+    public String oauth(Authentication authentication){
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         HttpSession session = request.getSession();

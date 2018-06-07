@@ -3,6 +3,7 @@ package com.github.boot.test;
 import com.github.boot.framework.config.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.session.SessionAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
@@ -14,11 +15,11 @@ import org.springframework.context.annotation.Import;
     DataSourceConfigure.class,
     ServletConfigure.class,
     RedisConfigure.class,
-    SessionConfigure.class,
     CacheConfigure.class,
+    ScheduleConfigure.class
 })
 @ComponentScan("com.github.boot.test")
-@SpringBootApplication
+@SpringBootApplication(exclude = SessionAutoConfiguration.class)
 public class Application {
 
     public static void main(String[] args) {

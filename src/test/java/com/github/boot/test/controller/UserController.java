@@ -6,6 +6,7 @@ import com.github.boot.test.entity.User;
 import com.github.boot.test.form.UserGetForm;
 import com.github.boot.test.form.UserPageForm;
 import com.github.boot.test.service.UserService;
+import com.github.boot.test.task.TaskTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -23,12 +24,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
 
     @Autowired
+    private TaskTest taskTest;
+
+    @Autowired
     private UserService userService;
 
     @RequestMapping("/get")
     @Json(type = User.class, excludes = "phone")
     public Result<User> get(UserGetForm form){
         Result result = Result.success();
+        taskTest.testAsync();
         User user = userService.findOne(form.getId());
         result.setData(user);
         return result;
@@ -42,4 +47,6 @@ public class UserController {
         result.setData(users);
         return result;
     }
+
+
 }
