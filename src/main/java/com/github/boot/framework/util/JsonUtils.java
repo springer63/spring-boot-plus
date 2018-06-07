@@ -1,16 +1,21 @@
 package com.github.boot.framework.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+
+import java.math.BigDecimal;
 
 /**
  * 依赖Jackson框架封装的工具类
@@ -33,9 +38,13 @@ public class JsonUtils {
 		objMapper.registerModule(hm);
 		objMapper.setSerializationInclusion(Include.NON_NULL);
 		objMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
-		JacksonXmlModule module = new JacksonXmlModule();
-		module.setDefaultUseWrapper(false);
-		xmlMapper = new XmlMapper(module);
+		objMapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(BigDecimal.class, new ToStringSerializer());
+		objMapper.registerModule(module);
+		JacksonXmlModule xmlModule = new JacksonXmlModule();
+		xmlModule.setDefaultUseWrapper(false);
+		xmlMapper = new XmlMapper(xmlModule);
 		xmlMapper.setSerializationInclusion(Include.NON_DEFAULT);
 		xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	}
