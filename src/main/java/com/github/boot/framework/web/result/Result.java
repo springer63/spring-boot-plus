@@ -109,44 +109,44 @@ public final class Result<T> implements Serializable{
 		this.message = msg;
 	}
 
-	public static Result success(){
-		return new Result(SUCCESS, "request success");
+	public static <T> Result<T> success(){
+		return new Result<>(SUCCESS, "request success");
 	}
 
-	public static Result locked(){
-		return new Result(ACCOUNT_LOCKED, "用户被锁定");
+	public static <T> Result<T> locked(){
+		return new Result<>(ACCOUNT_LOCKED, "用户被锁定");
 	}
 
-	public static Result unauthorized(){
-		return new Result(NOT_OAUTH, "请先登录！");
+	public static <T> Result<T> unauthorized(){
+		return new Result<>(NOT_OAUTH, "请先登录！");
 	}
 
-	public static Result permissionDenied(){
-		return new Result(PERMISSION_DENIED, "无访问权限");
+	public static <T> Result<T> permissionDenied(){
+		return new Result<>(PERMISSION_DENIED, "无访问权限");
 	}
 
-	public static Result illagalRequest(){
-		return new Result(ILLEGAL_REQUEST, "非法请求");
+	public static <T> Result<T> illagalRequest(){
+		return new Result<>(ILLEGAL_REQUEST, "非法请求");
 	}
 
-	public static Result invalidSign() {
-		return new Result(INVALID_SIGN, "无效的签名");
+	public static <T> Result<T> invalidSign() {
+		return new Result<>(INVALID_SIGN, "无效的签名");
 	}
 
-	public static Result invalidParam(){
-		return new Result(INVALID_PARAM, "参数校验不通过");
+	public static <T> Result<T> invalidParam(){
+		return new Result<>(INVALID_PARAM, "参数校验不通过");
 	}
 
-	public static Result notFound(){
-		return new Result(API_NOT_EXIST, "请求地址错误");
+	public static <T> Result<T> notFound(){
+		return new Result<>(API_NOT_EXIST, "请求地址错误");
 	}
 
-	public static Result systemError(){
-		return new Result(SYSTEM_ERROR, "服务器错误");
+	public static <T> Result<T> systemError(){
+		return new Result<>(SYSTEM_ERROR, "服务器错误");
 	}
 
-	public static Result systemBusy() {
-		return new Result(SYSTEM_BUSY, "操作过于频繁，请稍后重试");
+	public static <T> Result<T> systemBusy() {
+		return new Result<>(SYSTEM_BUSY, "操作过于频繁，请稍后重试");
 	}
 
 	public T getData() {
@@ -201,4 +201,5 @@ public final class Result<T> implements Serializable{
 		this.message = message;
 		return this;
 	}
+
 }
