@@ -18,16 +18,11 @@ public class WeightRandomUtils {
 	public static <T> T random(List<Item<T>> items){
 		Random random = new Random();
 		int weightSum = 0;
-		if(items != null && items.size() > 0){
-			for (Item<T> wc : items) {
-				weightSum += wc.getWeight();
-			}
+		for (Item<T> wc : items) {
+			weightSum += wc.getWeight();
 		}
-		if (weightSum <= 0) {
-			return null;
-		}
-		Integer n = random.nextInt(weightSum);
-		Integer m = 0;
+		int n = random.nextInt(weightSum);
+		int m = 0;
 		Item<T> value = null;
 		for (Item<T> wc : items) {
 			if (m <= n && n < m + wc.getWeight()) {

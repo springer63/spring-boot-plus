@@ -590,6 +590,8 @@ public class RequestWrap {
                 HttpDelete delete = ((HttpDelete) request);
                 delete.setURI(uri);
                 break;
+            default:
+                break;
         }
         request.setConfig(config.build());
     }
