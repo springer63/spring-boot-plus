@@ -2,15 +2,18 @@ package com.github.boot.framework.web.result;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
@@ -28,7 +31,13 @@ public class ResultJsonSerializer extends ObjectMapper {
         this.registerModule(new Jdk8Module());
         this.registerModule(new JavaTimeModule());
         SimpleModule module = new SimpleModule();
-        module.addSerializer(BigDecimal.class, new ToStringSerializer());
+        module.addSerializer(BigDecimal.class, new ToStringSerializer(){
+            @Override
+            public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+                BigDecimal v = (BigDecimal) value;
+                gen.writeString(v.toPlainString());
+            }
+        });
         this.registerModule(module);
         //不序列化空对象
         this.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);

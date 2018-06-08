@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
@@ -40,7 +42,13 @@ public class JsonUtils {
 		objMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
 		objMapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
 		SimpleModule module = new SimpleModule();
-		module.addSerializer(BigDecimal.class, new ToStringSerializer());
+		module.addSerializer(BigDecimal.class, new ToStringSerializer(){
+			@Override
+			public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+				BigDecimal v = (BigDecimal) value;
+				gen.writeString(v.toPlainString());
+			}
+		});
 		objMapper.registerModule(module);
 		JacksonXmlModule xmlModule = new JacksonXmlModule();
 		xmlModule.setDefaultUseWrapper(false);
