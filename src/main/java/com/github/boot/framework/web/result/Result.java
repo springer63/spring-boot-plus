@@ -110,7 +110,7 @@ public final class Result<T> implements Serializable{
 	}
 
 	public static <T> Result<T> success(){
-		return new Result<>(SUCCESS, "request success");
+		return new Result<>(SUCCESS, "success");
 	}
 
 	public static <T> Result<T> locked(){
