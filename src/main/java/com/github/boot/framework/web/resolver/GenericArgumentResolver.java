@@ -1,17 +1,20 @@
 package com.github.boot.framework.web.resolver;
 
-import com.github.boot.framework.util.ReflectionUtils;
 import com.github.boot.framework.web.exception.ApplicationException;
 import com.github.boot.framework.web.form.DeleteForm;
 import com.github.boot.framework.web.form.GetForm;
 import com.github.boot.framework.web.result.Result;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 /**
  * GenericArgumentResolver
@@ -19,7 +22,11 @@ import java.lang.reflect.ParameterizedType;
  * @author chenjianhui
  * @create 2018/05/15
  **/
-public class GenericArgumentResolver implements HandlerMethodArgumentResolver {
+public class GenericArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
+
+    public GenericArgumentResolver(List<HttpMessageConverter<?>> converters) {
+        super(converters);
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -30,9 +37,17 @@ public class GenericArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         ParameterizedType parameterType = (ParameterizedType) parameter.getGenericParameterType();
         Class<?> clazz = (Class<?>) parameterType.getActualTypeArguments()[0];
-        Object form = parameter.getParameterType().newInstance();
-        Object value = webRequest.getParameter("id");
-        if(value == null){
+        Object value;
+        GetForm form;
+        String contentType = webRequest.getHeader(HttpHeaders.CONTENT_TYPE);
+        if(contentType != null && contentType.startsWith(MediaType.APPLICATION_JSON_VALUE)){
+            form = (GetForm<?>) this.readWithMessageConverters(webRequest, parameter, parameter.getParameterType());
+            value = form.getId();
+        }else{
+            form = new GetForm<>();
+            value = webRequest.getParameter("id");
+        }
+        if(form.getId() == null){
             throw new ApplicationException(Result.INVALID_PARAM, "参数id不能为空");
         }
         if(Long.class == clazz){
@@ -41,7 +56,7 @@ public class GenericArgumentResolver implements HandlerMethodArgumentResolver {
         if(Integer.class == clazz){
             value = Integer.valueOf(value.toString());
         }
-        ReflectionUtils.setFieldValue(form, "id", value);
+        form.setId(value);
         return form;
     }
 }

@@ -1,9 +1,11 @@
 package com.github.boot.framework.web.resolver;
 
-import com.github.boot.framework.web.result.Result;
+import com.github.boot.framework.util.JsonUtils;
+import com.github.boot.framework.util.ReflectionUtils;
 import com.github.boot.framework.web.exception.ApplicationException;
 import com.github.boot.framework.web.form.Form;
-import com.github.boot.framework.util.ReflectionUtils;
+import com.github.boot.framework.web.form.GetForm;
+import com.github.boot.framework.web.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -79,6 +81,11 @@ public class FormArgumentResolver extends AbstractMessageConverterMethodArgument
 			throw new ApplicationException(Result.INVALID_PARAM, errorMsg);
 		}
 		return value;
+	}
+
+	public static void main(String[] args) {
+		GetForm<Long> getForm = JsonUtils.fromJson("{\"id\": 15}", GetForm.class);
+		System.out.println(getForm.getId().getClass());
 	}
 
 

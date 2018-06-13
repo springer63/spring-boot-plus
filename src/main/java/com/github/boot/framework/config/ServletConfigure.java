@@ -110,7 +110,7 @@ public class ServletConfigure extends WebMvcConfigurerAdapter implements Applica
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
 		HandlerMethodArgumentResolver formResolver = new FormArgumentResolver(converters);
 		HandlerMethodArgumentResolver sessionResolver = new SessionArgumentResolver();
-		HandlerMethodArgumentResolver genericResolver = new GenericArgumentResolver();
+		HandlerMethodArgumentResolver genericResolver = new GenericArgumentResolver(converters);
 		argumentResolvers.add(genericResolver);
 		argumentResolvers.add(formResolver);
 		argumentResolvers.add(sessionResolver);
