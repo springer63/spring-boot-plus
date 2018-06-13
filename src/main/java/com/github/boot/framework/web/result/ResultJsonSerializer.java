@@ -3,15 +3,14 @@ package com.github.boot.framework.web.result;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,6 +37,14 @@ public class ResultJsonSerializer extends ObjectMapper {
                 gen.writeString(v.toPlainString());
             }
         });
+        JsonDeserializer<? extends Page> serializer = new JsonDeserializer<Page>() {
+            @Override
+            public Page deserialize(JsonParser p, DeserializationContext ctx) throws IOException{
+                PageWrap pageWrap = ctx.readValue(p, PageWrap.class);
+                return pageWrap.page();
+            }
+        };
+        module.addDeserializer(Page.class, serializer);
         this.registerModule(module);
         //不序列化空对象
         this.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
@@ -47,12 +54,11 @@ public class ResultJsonSerializer extends ObjectMapper {
         this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         this.addMixIn(Object.class, DynamicFilterMixIn.class);
         this.setFilterProvider(new DynamicFilterProvider());
-
-
     }
 
     @JsonFilter(DynamicFilterProvider.FILTER_ID)
     interface DynamicFilterMixIn {
     }
+
 
 }

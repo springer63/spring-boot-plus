@@ -41,7 +41,7 @@ public class GenericArgumentResolver extends AbstractMessageConverterMethodArgum
         GetForm form;
         String contentType = webRequest.getHeader(HttpHeaders.CONTENT_TYPE);
         if(contentType != null && contentType.startsWith(MediaType.APPLICATION_JSON_VALUE)){
-            form = (GetForm<?>) this.readWithMessageConverters(webRequest, parameter, parameter.getParameterType());
+            form = (GetForm) this.readWithMessageConverters(webRequest, parameter, parameter.getParameterType());
             value = form.getId();
         }else{
             form = new GetForm<>();

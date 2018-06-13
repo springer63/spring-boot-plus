@@ -1,9 +1,17 @@
 package com.github.boot.test.utils;
 
 import com.github.boot.framework.util.JsonUtils;
+import com.github.boot.framework.web.result.ResultJsonSerializer;
 import org.junit.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JsonUtils
@@ -32,5 +40,20 @@ public class JsonUtilsTest {
         public void setA(BigDecimal a) {
             this.a = a;
         }
+    }
+
+    @Test
+    public void testPage() throws IOException {
+        ResultJsonSerializer serializer = new ResultJsonSerializer();
+        List<Integer> content = new ArrayList();
+        content.add(1);
+        content.add(2);
+        Pageable pageable = new PageRequest(1,2);
+
+        PageImpl<Integer> page = new PageImpl<>(content, pageable, 123);
+        String s = serializer.writeValueAsString(page);
+        System.out.println(s);
+        Page page1 = serializer.readValue(s, Page.class);
+        System.out.println(page);
     }
 }
