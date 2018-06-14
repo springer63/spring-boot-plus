@@ -1,10 +1,9 @@
 package com.github.boot.framework.web.interceptor;
 
 import com.github.boot.framework.util.ConstUtils;
-import com.github.boot.framework.util.JsonUtils;
+import com.github.boot.framework.web.annotation.OAuth;
 import com.github.boot.framework.web.exception.GlobalExceptionHandler;
 import com.github.boot.framework.web.result.Result;
-import com.github.boot.framework.web.annotation.OAuth;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -39,8 +38,7 @@ public class SecurityInterceptor extends HandlerInterceptorAdapter {
         if( allResources != null && !allResources.contains(request.getRequestURI())){
             return true;
         }
-        String jsonStr = (String) request.getSession().getAttribute(ConstUtils.SESSION_USER_ALLOW_RIGHT);
-        Set<String> resources = JsonUtils.fromJson(jsonStr, Set.class);
+        Set<String> resources = (Set<String>) request.getSession().getAttribute(ConstUtils.SESSION_USER_ALLOW_RIGHT);
         if(!resources.contains(request.getRequestURI())){
             request.setAttribute(GlobalExceptionHandler.ERROR_RESULT, Result.permissionDenied());
             request.getRequestDispatcher(GlobalExceptionHandler.ERROR_URI).forward(request, response);

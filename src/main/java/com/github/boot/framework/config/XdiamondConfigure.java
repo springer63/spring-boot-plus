@@ -30,9 +30,9 @@ public class XdiamondConfigure {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XdiamondConfigure.class);
 
-    @Bean
+    @Bean("configFactoryBean")
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public XDiamondConfigFactoryBean configFactoryBean(){
+    public static XDiamondConfigFactoryBean configFactoryBean(){
         String serverHost = System.getProperty("xdiamond.server.host");
         if(serverHost == null){
             throw new RuntimeException("XDiamond配置缺失");
@@ -42,9 +42,6 @@ public class XdiamondConfigure {
             throw new RuntimeException("XDiamond配置缺失");
         }
         String secretKey = System.getProperty("xdiamond.project.secretKey");
-        if(secretKey == null){
-            throw new RuntimeException("XDiamond配置缺失");
-        }
         String profile = System.getProperty("xdiamond.project.profile");
         if(profile == null){
             throw new RuntimeException("XDiamond配置缺失");
@@ -75,11 +72,11 @@ public class XdiamondConfigure {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public PropertyPlaceholderConfigurer placeholderConfigurer() throws Exception {
+    public static PropertyPlaceholderConfigurer placeholderConfigurer(XDiamondConfigFactoryBean configFactoryBean) throws Exception {
         PropertyPlaceholderConfigurer placeholderConfigurer = new PropertyPlaceholderConfigurer();
         placeholderConfigurer.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
         placeholderConfigurer.setIgnoreResourceNotFound(true);
-        XDiamondConfig config = configFactoryBean().getObject();
+        XDiamondConfig config = configFactoryBean.getObject();
         placeholderConfigurer.setProperties(config.getProperties());
         return placeholderConfigurer;
     }
