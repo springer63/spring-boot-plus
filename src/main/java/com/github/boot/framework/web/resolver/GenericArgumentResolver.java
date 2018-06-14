@@ -48,6 +48,9 @@ public class GenericArgumentResolver extends AbstractMessageConverterMethodArgum
             form = new GetForm<>();
             value = webRequest.getNativeRequest(HttpServletRequest.class).getParameter("id");
         }
+        if(value == null){
+            throw new ApplicationException(Result.INVALID_PARAM, "参数id不能为空");
+        }
         if(Long.class == clazz){
             value = Long.valueOf(value.toString());
         }
@@ -55,9 +58,6 @@ public class GenericArgumentResolver extends AbstractMessageConverterMethodArgum
             value = Integer.valueOf(value.toString());
         }
         form.setId(value);
-        if(form.getId() == null){
-            throw new ApplicationException(Result.INVALID_PARAM, "参数id不能为空");
-        }
         return form;
     }
 }
