@@ -1,15 +1,14 @@
 package com.github.boot.framework.config;
 
 import com.github.boot.framework.web.listener.LogLevelChangeListener;
-import io.github.xdiamond.client.XDiamondConfig;
 import io.github.xdiamond.client.annotation.AllKeyListener;
 import io.github.xdiamond.client.event.ConfigEvent;
 import io.github.xdiamond.client.event.EventType;
+import io.github.xdiamond.client.spring.PropertySourcesAdderBean;
 import io.github.xdiamond.client.spring.XDiamondConfigFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
@@ -67,18 +66,15 @@ public class XdiamondConfigure {
         configFactoryBean.setProfile(profile);
         configFactoryBean.setVersion(version);
         configFactoryBean.setSecretKey(secretKey);
+        configFactoryBean.setbSyncToSystemProperties("true");
         return configFactoryBean;
     }
 
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public static PropertyPlaceholderConfigurer placeholderConfigurer(XDiamondConfigFactoryBean configFactoryBean) throws Exception {
-        PropertyPlaceholderConfigurer placeholderConfigurer = new PropertyPlaceholderConfigurer();
-        placeholderConfigurer.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-        placeholderConfigurer.setIgnoreResourceNotFound(true);
-        XDiamondConfig config = configFactoryBean.getObject();
-        placeholderConfigurer.setProperties(config.getProperties());
-        return placeholderConfigurer;
+    public PropertySourcesAdderBean propertySourcesAdderBean(XDiamondConfigFactoryBean configFactoryBean) throws Exception {
+        PropertySourcesAdderBean bean = new PropertySourcesAdderBean();
+        bean.setProperties(configFactoryBean.getObject().getProperties());
+        return bean;
     }
 
     @Bean
