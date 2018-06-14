@@ -49,7 +49,7 @@ public class GenericArgumentResolver extends AbstractMessageConverterMethodArgum
             value = webRequest.getNativeRequest(HttpServletRequest.class).getParameter("id");
         }
         if(value == null){
-            throw new ApplicationException(Result.INVALID_PARAM, "参数id不能为空");
+            throw new ApplicationException(Result.INVALID_PARAM, "Param [id] can't be null");
         }
         if(Long.class == clazz){
             value = Long.valueOf(value.toString());
