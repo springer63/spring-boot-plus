@@ -13,6 +13,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class GenericArgumentResolver extends AbstractMessageConverterMethodArgum
             value = form.getId();
         }else{
             form = new GetForm<>();
-            value = webRequest.getParameter("id");
+            value = webRequest.getNativeRequest(HttpServletRequest.class).getParameter("id");
         }
         if(Long.class == clazz){
             value = Long.valueOf(value.toString());
