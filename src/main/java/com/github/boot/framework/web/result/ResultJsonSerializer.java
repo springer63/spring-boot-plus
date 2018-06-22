@@ -40,8 +40,7 @@ public class ResultJsonSerializer extends ObjectMapper {
         JsonDeserializer<? extends Page> serializer = new JsonDeserializer<Page>() {
             @Override
             public Page deserialize(JsonParser p, DeserializationContext ctx) throws IOException{
-                PageWrap pageWrap = ctx.readValue(p, PageWrap.class);
-                return pageWrap.page();
+                return ctx.readValue(p, PageWrap.class);
             }
         };
         module.addDeserializer(Page.class, serializer);

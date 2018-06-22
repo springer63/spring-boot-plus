@@ -4,8 +4,10 @@ import com.github.boot.framework.jpa.Criterion;
 import com.github.boot.framework.jpa.dao.BaseDao;
 import com.github.boot.framework.jpa.spec.SpecificationParser;
 import com.github.boot.framework.service.BaseService;
+import com.github.boot.framework.web.result.PageWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -65,7 +67,8 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
 
 	@Override
 	public Page<T> page(Criterion<T> criterion){
-		return this.findAll(SpecificationParser.condition(criterion), SpecificationParser.pageable(criterion));
+		Page<T> page = this.findAll(SpecificationParser.condition(criterion), SpecificationParser.pageable(criterion));
+		return PageWrap.wrap((PageImpl<T>) page);
 	}
 
 	@Override
