@@ -64,7 +64,7 @@ public class SpecificationParser {
             return sort;
         }
         SortProperty[] sps = criterion.getClass().getAnnotationsByType(SortProperty.class);
-        if(sps != null){
+        if(sps != null && sps.length > 0){
             List<Sort.Order> orders = Arrays.stream(sps)
                     .map(e -> new Sort.Order(Sort.Direction.fromString(e.direction()), e.value()))
                     .collect(Collectors.toList());

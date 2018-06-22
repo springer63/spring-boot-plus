@@ -18,7 +18,6 @@ import org.redisson.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,13 +36,31 @@ public class RedisConfigure{
 	@Value("${redis.node:127.0.0.1:6379}")
 	private String node;
 
+	public static final String MODE_SINGLE = "single";
+
+	public static final String MODE_CLUSTER = "cluster";
+
+	public static final String MODE_MASTER_SLAVE = "master-slave";
+
+	@Bean
+	public RedissonClient redisClient(){
+		if(MODE_SINGLE.equals(mode)){
+			return redisSingleClient();
+		}
+		if(MODE_MASTER_SLAVE.equals(mode)){
+			return redisMasterSlaveClient();
+		}
+		if(MODE_CLUSTER.equals(mode)){
+			return redisClusterClient();
+		}
+		return redisSingleClient();
+	}
+
 	/**
 	 * 单例模式
 	 * @return
 	 */
-	@Bean
-	@ConditionalOnExpression("'${redis.mode}'=='single'")
-	public RedissonClient redisSingleClient(){
+	private RedissonClient redisSingleClient(){
 		Config config = new Config();
 		config.setCodec(new CacheKryoCodec());
 		config.useSingleServer().setAddress(node);
@@ -54,9 +71,7 @@ public class RedisConfigure{
 	 * 主从模式
 	 * @return
 	 */
-	@Bean
-	@ConditionalOnExpression("'${redis.mode}'=='master-slave'")
-	public RedissonClient redissonClient(){
+	private RedissonClient redisMasterSlaveClient(){
 		Config config = new Config();
 		config.setCodec(new CacheKryoCodec());
 		String[] nodes = node.split(",");
@@ -70,9 +85,7 @@ public class RedisConfigure{
 	 * 集群模式
 	 * @return
 	 */
-	@Bean
-	@ConditionalOnExpression("'${redis.mode}'=='cluster'")
-	public RedissonClient redisClusterClient(){
+	private RedissonClient redisClusterClient(){
 		Config config = new Config();
 		config.setCodec(new CacheKryoCodec());
 		config.useClusterServers().setScanInterval(2000).addNodeAddress(node.split(","));
