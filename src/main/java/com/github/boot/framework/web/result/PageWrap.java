@@ -31,7 +31,7 @@ public class PageWrap<T> extends PageImpl<T> {
 
     private List<T> content;
 
-    private static Pageable DEFAULT_PAGEABLE = new PageRequest(0, 0);
+    private static Pageable DEFAULT_PAGEABLE = new PageRequest(0, 10);
 
     public PageWrap(){
         super(Collections.EMPTY_LIST, DEFAULT_PAGEABLE, 0);
