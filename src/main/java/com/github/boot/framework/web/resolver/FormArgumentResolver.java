@@ -11,9 +11,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
 
@@ -70,11 +72,13 @@ public class FormArgumentResolver extends AbstractMessageConverterMethodArgument
 		BindingResult br = binder.getBindingResult();
 		if(br.getFieldErrorCount() > 0){
 			String errorMsg;
-			if(br.getFieldError().isBindingFailure() ){
-				errorMsg = String.format("参数[%s]类型不匹配", br.getFieldError().getField());
+			FieldError fieldError = br.getFieldError();
+			if(fieldError.isBindingFailure() ){
+				errorMsg = String.format("参数[%s]类型不匹配", fieldError.getField());
 			}else{
-				errorMsg = br.getFieldError().getField() + " " + br.getFieldError().getDefaultMessage();
+				errorMsg = fieldError.getField() + " " + fieldError.getDefaultMessage();
 			}
+			webRequest.setAttribute("data", fieldError, RequestAttributes.SCOPE_REQUEST);
 			logger.info("接口【{}】参数校验失败：{}", webRequest.getNativeRequest(HttpServletRequest.class).getRequestURI(), br.getFieldError().getDefaultMessage());
 			throw new ApplicationException(Result.INVALID_PARAM, errorMsg);
 		}

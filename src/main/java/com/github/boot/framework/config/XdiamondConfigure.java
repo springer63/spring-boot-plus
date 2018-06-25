@@ -41,7 +41,7 @@ public class XdiamondConfigure {
             throw new RuntimeException("XDiamond配置缺失");
         }
         String secretKey = System.getProperty("xdiamond.project.secretKey");
-        String profile = System.getProperty("xdiamond.project.profile");
+        String profile = System.getProperty("xdiamond.project.profile", "");
         if(profile == null){
             throw new RuntimeException("XDiamond配置缺失");
         }
@@ -71,7 +71,7 @@ public class XdiamondConfigure {
     }
 
     @Bean
-    public PropertySourcesAdderBean propertySourcesAdderBean(XDiamondConfigFactoryBean configFactoryBean) throws Exception {
+    public static PropertySourcesAdderBean propertySourcesAdderBean(XDiamondConfigFactoryBean configFactoryBean) throws Exception {
         PropertySourcesAdderBean bean = new PropertySourcesAdderBean();
         bean.setProperties(configFactoryBean.getObject().getProperties());
         return bean;
