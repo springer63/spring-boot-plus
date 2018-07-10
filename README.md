@@ -60,6 +60,7 @@ Json动态视图直接采用注解@Json
 
 ### 采用JSR 303标准进行参数校验 
 JSR 303 – Bean Validation 是一个数据验证的规范，2009 年 11 月确定最终方案。2009 年 12 月 Java EE 6 发布，Bean Validation 作为一个重要特性被包含其中。本文将对 Bean Validation 的主要功能进行介绍，并通过一些示例来演示如何在 Java 开发过程正确的使用 Bean Validation。
+```
 > Bean Validation 中的 constraint
 @Null	被注释的元素必须为 null
 @NotNull	被注释的元素必须不为 null
@@ -78,6 +79,7 @@ JSR 303 – Bean Validation 是一个数据验证的规范，2009 年 11 月确�
 @Length	被注释的字符串的大小必须在指定的范围内
 @NotEmpty	被注释的字符串的必须非空
 @Range	被注释的元素必须在合适的范围内
+```
 
 代码示例
 
