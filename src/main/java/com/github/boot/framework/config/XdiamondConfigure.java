@@ -32,19 +32,10 @@ public class XdiamondConfigure {
     @Bean("configFactoryBean")
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public static XDiamondConfigFactoryBean configFactoryBean(){
-        String serverHost = System.getProperty("xdiamond.server.host");
-        if(serverHost == null){
-            throw new RuntimeException("XDiamond配置缺失");
-        }
-        String serverPort = System.getProperty("xdiamond.server.port");
-        if(serverPort == null){
-            throw new RuntimeException("XDiamond配置缺失");
-        }
-        String secretKey = System.getProperty("xdiamond.project.secretKey");
-        String profile = System.getProperty("xdiamond.project.profile", "");
-        if(profile == null){
-            throw new RuntimeException("XDiamond配置缺失");
-        }
+        String serverHost = System.getProperty("xdiamond.server.host", "127.0.0.1");
+        String serverPort = System.getProperty("xdiamond.server.port", "5678");
+        String secretKey = System.getProperty("xdiamond.project.secretKey", "");
+        String profile = System.getProperty("xdiamond.project.profile", "dev");
         String version = System.getProperty("xdiamond.project.version");
         if(version == null){
             throw new RuntimeException("XDiamond配置缺失");

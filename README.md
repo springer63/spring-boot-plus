@@ -49,10 +49,10 @@ Json动态视图直接采用注解@Json
  
     @Cacheable
     @RequestMapping(value = "/list", name = "分页查询活动列表")
-    @Json(type = AActivity.class, exclude = "createdTime,updatedTime", include="title")
+    @Json(type = Activity.class, exclude = {"createdTime", "updatedTime"}, include="title")
     public Result list(ActivityPageForm form) {
         Result result = Result.success();
-        PageWrap<AActivity> page = activityService.page(form);
+        Page<AActivity> page = activityService.page(form);
         result.putData("page", page);
         return result;
     }
@@ -83,7 +83,7 @@ JSR 303 – Bean Validation 是一个数据验证的规范，2009 年 11 月确�
 
    ```java
    
-	public class AddOrderForm implement Form {
+	public class OrderAddForm implement Form {
 		// 必须不为 null, 大小是 10
 		@NotNull
 		@Size(min = 10, max = 10)
