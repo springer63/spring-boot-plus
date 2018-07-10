@@ -123,10 +123,10 @@ Spring 3.1 引入了激动人心的基于注释（annotation）的缓存（cache
    
     @Cacheable
     @RequestMapping(value = "/list", name = "分页查询活动列表")
-    @Json(type = AActivity.class, exclude = "createdTime,updatedTime", include="title")
+    @Json(type = Activity.class, exclude = {"createdTime", "updatedTime"}, include="title")
     public Result list(ActivityPageForm form) {
         Result result = Result.success();
-        PageWrap<AActivity> page = activityService.page(form);
+        Page<AActivity> page = activityService.page(form);
         result.putData("page", page);
         return result;
     }
