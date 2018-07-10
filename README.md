@@ -123,10 +123,10 @@ Spring 3.1 引入了激动人心的基于注释（annotation）的缓存（cache
    
     @Cacheable
     @RequestMapping(value = "/list", name = "分页查询活动列表")
-    @Json(type = AActivity.class, exclude = "createdTime,updatedTime", include="title")
+    @Json(type = Activity.class, exclude = {"createdTime", "updatedTime"}, include="title")
     public Result list(ActivityPageForm form) {
         Result result = Result.success();
-        PageWrap<AActivity> page = activityService.page(form);
+        Page<Activity> page = activityService.page(form);
         result.putData("page", page);
         return result;
     }
@@ -225,7 +225,7 @@ public interface BaseService<T, ID extends Serializable> {
 	 * @param pageable
 	 * @return
 	 */
-	public PageWrap<T> findAll(Pageable pageable);
+	public Page<T> findAll(Pageable pageable);
 	
 	/**
 	 * 按自定义条件查询一个实体
@@ -247,7 +247,7 @@ public interface BaseService<T, ID extends Serializable> {
 	 * @param pageable
 	 * @return
 	 */
-	public PageWrap<T> findAll(Specification<T> spec, Pageable pageable) ;
+	public Page<T> findAll(Specification<T> spec, Pageable pageable) ;
 	
 	/**
 	 * 根据自定义条件排序查询实体
