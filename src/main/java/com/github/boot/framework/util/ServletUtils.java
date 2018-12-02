@@ -97,7 +97,7 @@ public class ServletUtils {
 		return true;
 	}
 
-	public static void setFileDownloadHeader(HttpServletResponse response, String fileName) {
+	public static void setFileDownloadHeader(HttpServletResponse response, String fileName)    {
 		try {
 			String encodedfileName = new String(fileName.getBytes(), "utf-8");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\"");

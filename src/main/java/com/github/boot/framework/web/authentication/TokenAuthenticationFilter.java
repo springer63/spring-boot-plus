@@ -28,7 +28,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     public TokenAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
         this.tokenManager = authenticationManager.getTokenManager();
-        this.tokenName = authenticationManager.getApplication() + "_" + ConstUtils.TOKEN_NAME;
+        this.tokenName = authenticationManager.getApplication() + "_" + tokenManager;
+        this.tokenManager.setTokenName(this.tokenName);
     }
 
     @Override
